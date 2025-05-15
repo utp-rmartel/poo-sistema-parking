@@ -15,7 +15,7 @@ import java.util.List;
 public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
 
     @Override
-    public int Create(TarifaBE input) {
+    public boolean Create(TarifaBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -30,12 +30,12 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
     }
 
     @Override
-    public int Update(TarifaBE input) {
+    public boolean Update(TarifaBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int Delete(String id) {
+    public boolean Delete(String id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

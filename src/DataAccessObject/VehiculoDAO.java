@@ -15,7 +15,7 @@ import java.util.List;
 public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
 
     @Override
-    public int Create(VehiculoBE input) {
+    public boolean Create(VehiculoBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -30,12 +30,12 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
     }
 
     @Override
-    public int Update(VehiculoBE input) {
+    public boolean Update(VehiculoBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int Delete(String id) {
+    public boolean Delete(String id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

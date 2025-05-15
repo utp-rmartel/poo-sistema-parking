@@ -5,7 +5,12 @@
 package DataAccessObject;
 
 import BusinessEntity.EmpleadoBE;
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.UUID;
 
 
 /**
@@ -15,28 +20,130 @@ import java.util.List;
 public class EmpleadoDAO extends ConexionMySQL implements IBaseDAO<EmpleadoBE>{
 
     @Override
-    public int Create(EmpleadoBE input) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean Create(EmpleadoBE input) {
+        boolean result=false;
+        
+        try{
+            String SQL = "INSERT empleados"
+                    + "("
+                        + "id,"
+                        + "nombre,"
+                        + "apellidos,"
+                        + "documento,"
+                        + "tipoDocumento,"
+                        + "telefono"
+                    + ")"
+                    + "VALUES"
+                    + "(?,?,?,?,?,?)";
+            PreparedStatement pst= getConexion().prepareStatement(SQL);
+            pst.setString(1, input.getId().toString());
+            pst.setString(2, input.getNombre());
+            pst.setString(3, input.getApellidos());
+            pst.setString(4, input.getDocumento());
+            pst.setInt(5, input.getTipoDocumento());
+            pst.setString(6, input.getTelefono());
+            
+            result = pst.execute();            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public EmpleadoBE Read(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EmpleadoBE item = new EmpleadoBE();
+        try{
+            String SQL ="SELECT * FROM empleados WHERE id=? and activo = 1";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setString(1, id);
+            ResultSet res = pst.executeQuery(); 
+            
+            while(res.next()){
+                item.setId(UUID.fromString(id));
+                item.setNombre(res.getString("nombre"));
+                item.setApellidos(res.getString("apellidos"));
+                item.setDocumento(res.getString("documento"));
+                item.setTipoDocumento(res.getInt("tipoDocumento"));
+                item.setTelefono(res.getString("telefono"));            
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return item;
     }
 
     @Override
     public List<EmpleadoBE> ReadAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       List<EmpleadoBE> lst = null; 
+        try{
+            String SQL = "SELECT * FROM empleados WHERE activo = 1";
+            Statement stm = getConexion().createStatement();
+            ResultSet res = stm.executeQuery(SQL);
+            lst = new ArrayList<>(); 
+            while(res.next()){
+                EmpleadoBE item = new EmpleadoBE();
+                item.setId(UUID.fromString(res.getString("id")));
+                item.setNombre(res.getString("nombre"));
+                item.setApellidos(res.getString("apellidos"));
+                item.setDocumento(res.getString("documento"));
+                item.setTipoDocumento(res.getInt("tipoDocumento"));
+                item.setTelefono(res.getString("telefono"));
+                
+                lst.add(item);
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return lst;
     }
 
     @Override
-    public int Update(EmpleadoBE input) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean Update(EmpleadoBE input) {
+        boolean result = false;
+        try{
+            String SQL="UPDATE empleados "
+                    + "SET "
+                        + "nombre=?,"
+                        + "apellidos=?,"
+                        + "documento=?,"
+                        + "tipoDocumento=?,"
+                        + "telefono=?"
+                    + "WHERE "
+                        + "id=?";
+            
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            
+            pst.setString(1, input.getNombre());
+            pst.setString(2, input.getApellidos());
+            pst.setString(3, input.getDocumento());
+            pst.setInt(4, input.getTipoDocumento());
+            pst.setString(5, input.getTelefono());
+            pst.setString(7, input.getId().toString());
+   
+            result = pst.execute();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 
     @Override
-    public int Delete(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean Delete(String id) {
+        boolean result = false;
+        try {
+            String SQL="UPDATE empleados "
+                    + "SET "
+                        + "activo=0"
+                    + "WHERE "
+                        + "id=?";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setString(1, id);
+            result = pst.execute(); 
+        }catch(Exception e){
+            System.out.println(e.getMessage()); 
+        }        
+        return result;
     }
 
     

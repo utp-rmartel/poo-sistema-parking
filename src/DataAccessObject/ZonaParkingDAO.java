@@ -15,7 +15,7 @@ import java.util.List;
 public class ZonaParkingDAO extends ConexionMySQL implements IBaseDAO<ZonaParkingBE>{
 
     @Override
-    public int Create(ZonaParkingBE input) {
+    public boolean Create(ZonaParkingBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -30,12 +30,12 @@ public class ZonaParkingDAO extends ConexionMySQL implements IBaseDAO<ZonaParkin
     }
 
     @Override
-    public int Update(ZonaParkingBE input) {
+    public boolean Update(ZonaParkingBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int Delete(String id) {
+    public boolean Delete(String id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

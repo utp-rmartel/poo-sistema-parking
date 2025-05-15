@@ -11,9 +11,9 @@ import java.util.List;
  * @author Royss
  */
 public interface IBaseDAO<T> {
-    public int Create(T input);
+    public boolean Create(T input);
     public T Read(String id);  
     public List<T> ReadAll();  
-    public int Update(T input);  
-    public int Delete(String id);  
+    public boolean Update(T input);  
+    public boolean Delete(String id);  
 }

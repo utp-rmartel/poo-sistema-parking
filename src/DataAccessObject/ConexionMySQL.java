@@ -16,13 +16,12 @@ import java.sql.DatabaseMetaData;
 public class ConexionMySQL {
     //Atributos
     //mysql://root:CCLwuwLtOAGMcOoPATxKGYOJILKngkZu@hopper.proxy.rlwy.net:55324/railway
-    private String StrConxMySQL ="jdbc:mysql://hopper.proxy.rlwy.net:55324/railway";
-    private String StrUserMySQL ="root";
-    private String StrPassMySQL ="CCLwuwLtOAGMcOoPATxKGYOJILKngkZu";
+    private String StrConxMySQL ="";
+    private String StrUserMySQL ="";
+    private String StrPassMySQL ="";
     private Connection Conexion;
     //Constructor
     public ConexionMySQL() {
-        System.out.println("Me estas llamando :)");
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());

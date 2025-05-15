@@ -5,8 +5,13 @@
 package DataAccessObject;
 
 import BusinessEntity.ComprobanteBE;
+import java.sql.Date;
 import java.util.List;
-
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.UUID;
 /**
  *
  * @author Royss
@@ -14,28 +19,161 @@ import java.util.List;
 public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<ComprobanteBE>{
 
     @Override
-    public int Create(ComprobanteBE input) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean Create(ComprobanteBE input) {
+        boolean result=false;
+        
+        try{
+              String SQL = "INSERT clientes"
+                    + "("
+                        + "id,"
+                        + "idEstacionamiento,"
+                        + "numeroComprobante,"
+                        + "tipoTarifa,"
+                        + "zonaParking,"
+                        + "tipoZona,"
+                        + "precioBase,"
+                        + "precioAdicional,"
+                        + "montoTotal,"
+                        + "idMetodoPago,"
+                        + "fechaPago"
+                    + ")"
+                    + "VALUES"
+                    + "(?,?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement pst= getConexion().prepareStatement(SQL);
+            pst.setString(1, input.getId().toString());
+            pst.setString(2, input.getIdEstacionamiento().toString());
+            pst.setString(3, input.getNumeroComprobante());
+            pst.setString(4, input.getTipoTarifa());
+            pst.setString(5, input.getZonaParking());
+            pst.setString(6, input.getTipoZona());
+            pst.setDouble(7, input.getPrecioBase());
+            pst.setDouble(8, input.getPrecioAdicional());
+            pst.setDouble(9, input.getMontoTotal());
+            pst.setInt(10, input.getIdMetodoPago());
+            pst.setDate(11, (Date) input.getFechaPago());
+            
+            result = pst.execute();            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public ComprobanteBE Read(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ComprobanteBE item = new ComprobanteBE();
+        try{
+            String SQL ="SELECT * FROM comprobantes WHERE id=? and activo = 1";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setString(1, id);
+            ResultSet res = pst.executeQuery(); 
+            
+            while(res.next()){
+                item.setId(UUID.fromString(id));          
+                item.setIdEstacionamiento(UUID.fromString("idEstacionamiento"));
+                item.setNumeroComprobante(res.getString("numeroComprobante"));
+                item.setTipoTarifa(res.getString("tipoTarifa"));
+                item.setZonaParking(res.getString("zonaParking"));
+                item.setTipoZona(res.getString("tipoZona"));
+                item.setPrecioBase(res.getDouble("precioBase"));
+                item.setPrecioAdicional(res.getDouble("precioAdicional"));
+                item.setMontoTotal(res.getDouble("montoTotal"));
+                item.setIdMetodoPago(res.getInt("idMetodoPago"));
+                item.setFechaPago(res.getDate("fechaPago"));           
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return item;
     }
 
     @Override
     public List<ComprobanteBE> ReadAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<ComprobanteBE> lst = null; 
+        try{
+            String SQL = "SELECT * FROM comprobantes WHERE activo = 1";
+            Statement stm = getConexion().createStatement();
+            ResultSet res = stm.executeQuery(SQL);
+            lst = new ArrayList<>(); 
+            while(res.next()){
+                ComprobanteBE item = new ComprobanteBE();
+                item.setId(UUID.fromString(res.getString("id")));
+                item.setIdEstacionamiento(UUID.fromString("idEstacionamiento"));
+                item.setNumeroComprobante(res.getString("numeroComprobante"));
+                item.setTipoTarifa(res.getString("tipoTarifa"));
+                item.setZonaParking(res.getString("zonaParking"));
+                item.setTipoZona(res.getString("tipoZona"));
+                item.setPrecioBase(res.getDouble("precioBase"));
+                item.setPrecioAdicional(res.getDouble("precioAdicional"));
+                item.setMontoTotal(res.getDouble("montoTotal"));
+                item.setIdMetodoPago(res.getInt("idMetodoPago"));
+                item.setFechaPago(res.getDate("fechaPago"));  
+                
+                lst.add(item);
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return lst;
+
     }
 
     @Override
-    public int Update(ComprobanteBE input) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean Update(ComprobanteBE input) {
+         boolean result = false;
+        try{
+            String SQL="UPDATE comprobantes "
+                    + "SET "
+                        + "idEstacionamiento=?,"
+                        + "numeroComprobante=?,"
+                        + "tipoTarifa=?,"
+                        + "zonaParking=?,"
+                        + "tipoZona=?,"
+                        + "precioBase=?,"
+                        + "precioAdicional=?,"
+                        + "montoTotal=?,"
+                        + "idMetodoPago=?,"
+                        + "fechaPago=?"
+                    + "WHERE "
+                        + "id=?";
+            
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            
+            pst.setString(1, input.getIdEstacionamiento().toString());
+            pst.setString(2, input.getNumeroComprobante());
+            pst.setString(3, input.getTipoTarifa());
+            pst.setString(4, input.getZonaParking());
+            pst.setString(5, input.getTipoZona());
+            pst.setDouble(6, input.getPrecioBase());
+            pst.setDouble(7, input.getPrecioAdicional());
+            pst.setDouble(8, input.getMontoTotal());
+            pst.setInt(9,input.getIdMetodoPago());
+            pst.setDate(10, (Date) input.getFechaPago());
+            pst.setString(11, input.getId().toString());
+   
+            result = pst.execute();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 
     @Override
-    public int Delete(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean Delete(String id) {
+        boolean result = false;
+        try {
+            String SQL="UPDATE comprobantes "
+                    + "SET "
+                        + "activo=0"
+                    + "WHERE "
+                        + "id=?";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setString(1, id);
+            result = pst.execute(); 
+        }catch(Exception e){
+            System.out.println(e.getMessage()); 
+        }        
+        return result;
     }
 
     

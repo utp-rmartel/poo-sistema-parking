@@ -15,7 +15,7 @@ import java.util.List;
 public class MaestroDAO extends ConexionMySQL implements IBaseDAO<MaestroBE>{
 
     @Override
-    public int Create(MaestroBE input) {
+    public boolean Create(MaestroBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -30,12 +30,12 @@ public class MaestroDAO extends ConexionMySQL implements IBaseDAO<MaestroBE>{
     }
 
     @Override
-    public int Update(MaestroBE input) {
+    public boolean Update(MaestroBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int Delete(String id) {
+    public boolean Delete(String id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

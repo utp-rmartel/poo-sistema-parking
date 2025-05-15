@@ -14,10 +14,8 @@ import View.Pages.PageTarifas;
 import View.Pages.PageUsuarios;
 import View.Pages.PageVehiculos;
 import View.Pages.PageZonaParking;
-import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.util.Optional;
 
 /**
  *
@@ -46,13 +44,7 @@ public class FormMenu extends javax.swing.JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
         this.setExtendedState(MAXIMIZED_BOTH);
-        viewDashboard();
-    }
-
-    private void viewDashboard() {
-        pDashboard.setLocation(0, 0);
-        this.currentComponent = pDashboard;
-        navigationService.navigatePage(pDashboard);
+        showPage(this.pDashboard, Optional.empty(), Optional.empty());
     }
 
     /**
@@ -65,7 +57,7 @@ public class FormMenu extends javax.swing.JFrame {
     private void initComponents() {
 
         jSeparator1 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
         pContent = new javax.swing.JPanel();
         pSidebar = new javax.swing.JPanel();
         btnClientes = new javax.swing.JButton();
@@ -84,8 +76,13 @@ public class FormMenu extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(800, 600));
         setState(6);
 
-        jButton1.setText("Cerrar Sesión");
-        jButton1.setName("btnCerrarSesion"); // NOI18N
+        btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.setName("btnCerrarSesion"); // NOI18N
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
 
         pContent.setBackground(new java.awt.Color(255, 255, 255));
         pContent.setForeground(new java.awt.Color(255, 255, 255));
@@ -229,7 +226,7 @@ public class FormMenu extends javax.swing.JFrame {
             .addComponent(jSeparator1)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jButton1)
+                .addComponent(btnCerrarSesion)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(13, 13, 13)
@@ -242,7 +239,7 @@ public class FormMenu extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(11, 11, 11)
-                .addComponent(jButton1)
+                .addComponent(btnCerrarSesion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -256,102 +253,54 @@ public class FormMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
-        
-        if(this.currentComponent == this.pClientes)
-            return;
-        
-        pClientes.setSize(680, 240);
-        pClientes.setLocation(0, 0);
-
-        this.currentComponent = pClientes;
-        navigationService.navigatePage(pClientes);
+        showPage(this.pClientes, Optional.empty(), Optional.empty());
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
-
-        if(this.currentComponent == this.pDashboard)
-            return;
-        
-        viewDashboard();
+        showPage(this.pDashboard, Optional.empty(), Optional.empty());
     }//GEN-LAST:event_btnDashboardActionPerformed
 
     private void btnVehiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVehiculosActionPerformed
-        if(this.currentComponent == this.pVehiculos)
-            return;
-        
-        pVehiculos.setSize(680, 240);
-        pVehiculos.setLocation(0, 0);
-
-        this.currentComponent = pVehiculos;
-        navigationService.navigatePage(pVehiculos);
+        showPage(this.pVehiculos, Optional.empty(), Optional.empty());
     }//GEN-LAST:event_btnVehiculosActionPerformed
 
     private void btnZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnZonasActionPerformed
-       if(this.currentComponent == this.pZonaParking)
-            return;
-        
-        pZonaParking.setSize(680, 500);
-        pZonaParking.setLocation(0, 0);
-
-        this.currentComponent = pZonaParking;
-        navigationService.navigatePage(pZonaParking);
+       showPage(this.pZonaParking, Optional.empty(), Optional.empty());
     }//GEN-LAST:event_btnZonasActionPerformed
 
     private void btnTarifasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTarifasActionPerformed
-       if(this.currentComponent == this.pTarifas)
-            return;
-        
-        pTarifas.setSize(680, 500);
-        pTarifas.setLocation(0, 0);
-
-        this.currentComponent = pTarifas;
-        navigationService.navigatePage(pTarifas);
+        showPage(this.pTarifas, Optional.empty(), Optional.empty());
     }//GEN-LAST:event_btnTarifasActionPerformed
 
     private void btnComprobantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobantesActionPerformed
-        if(this.currentComponent == this.pComprobantes)
-            return;
-        
-        pComprobantes.setSize(680, 500);
-        pComprobantes.setLocation(0, 0);
-
-        this.currentComponent = pComprobantes;
-        navigationService.navigatePage(pComprobantes);
+        showPage(this.pComprobantes, Optional.empty(), Optional.empty());
     }//GEN-LAST:event_btnComprobantesActionPerformed
 
     private void btnEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpleadosActionPerformed
-        if(this.currentComponent == this.pEmpleados)
-            return;
-        
-        pEmpleados.setSize(680, 500);
-        pEmpleados.setLocation(0, 0);
-
-        this.currentComponent = pEmpleados;
-        navigationService.navigatePage(pEmpleados);
+        showPage(this.pEmpleados, Optional.empty(), Optional.empty());
     }//GEN-LAST:event_btnEmpleadosActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
-        if(this.currentComponent == this.pUsuarios)
-            return;
-        
-        pUsuarios.setSize(680, 500);
-        pUsuarios.setLocation(0, 0);
-
-        this.currentComponent = pUsuarios;
-        navigationService.navigatePage(pUsuarios);
+       showPage(this.pUsuarios, Optional.empty(), Optional.empty());
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnEstacionamientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEstacionamientosActionPerformed
-       if(this.currentComponent == this.pEstacionamientos)
-            return;
-        
-        pEstacionamientos.setSize(680, 500);
-        pEstacionamientos.setLocation(0, 0);
-
-        this.currentComponent = pEstacionamientos;
-        navigationService.navigatePage(pEstacionamientos);
+       showPage(this.pEstacionamientos, Optional.empty(), Optional.empty());
     }//GEN-LAST:event_btnEstacionamientosActionPerformed
 
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        this.dispose();
+        FormLogin fLogin = new FormLogin();
+        fLogin.setVisible(true);
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    void showPage(Component component, Optional<Integer> width, Optional<Integer> height){
+        if(this.currentComponent == component)
+            return;
+        
+        this.currentComponent = component;
+        navigationService.navigatePage(component, width, height);
+    }
     /**
      * @param args the command line arguments
      */
@@ -388,6 +337,7 @@ public class FormMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnComprobantes;
     private javax.swing.JButton btnDashboard;
@@ -397,7 +347,6 @@ public class FormMenu extends javax.swing.JFrame {
     private javax.swing.JButton btnUsuarios;
     private javax.swing.JButton btnVehiculos;
     private javax.swing.JButton btnZonas;
-    private javax.swing.JButton jButton1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel pContent;
     private javax.swing.JPanel pSidebar;

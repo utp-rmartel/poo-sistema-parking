@@ -27,6 +27,16 @@ public abstract class PersonaAbs extends AuditoriaAbs{
     public String getNombre() {
         return nombre;
     }
+
+    public int getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(int tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+    
+    
     
     public void setNombre(String nombre) {
         this.nombre = nombre;

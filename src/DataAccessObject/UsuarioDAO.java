@@ -15,7 +15,7 @@ import java.util.List;
 public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE>{
 
     @Override
-    public int Create(UsuarioBE input) {
+    public boolean Create(UsuarioBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -30,12 +30,12 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE>{
     }
 
     @Override
-    public int Update(UsuarioBE input) {
+    public boolean Update(UsuarioBE input) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int Delete(String id) {
+    public boolean Delete(String id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
