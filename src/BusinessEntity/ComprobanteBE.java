@@ -1,0 +1,121 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package BusinessEntity;
+
+import java.util.Date;
+import java.sql.Time;
+import java.util.UUID;
+
+/**
+ *
+ * @author Royss
+ */
+public class ComprobanteBE extends AuditoriaAbs{
+    private UUID id;
+    private UUID idEstacionamiento;
+    private String numeroComprobante;
+    private String tipoTarifa;
+    private String zonaParking;
+    private String tipoZona;
+    private Double precioBase;
+    private Double precioAdicional;
+    private Double montoTotal;
+    private int idMetodoPago;
+    private Date fechaPago;
+
+    public ComprobanteBE() {
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getIdEstacionamiento() {
+        return idEstacionamiento;
+    }
+
+    public void setIdEstacionamiento(UUID idEstacionamiento) {
+        this.idEstacionamiento = idEstacionamiento;
+    }
+
+    public String getNumeroComprobante() {
+        return numeroComprobante;
+    }
+
+    public void setNumeroComprobante(String numeroComprobante) {
+        this.numeroComprobante = numeroComprobante;
+    }
+
+    public String getTipoTarifa() {
+        return tipoTarifa;
+    }
+
+    public void setTipoTarifa(String tipoTarifa) {
+        this.tipoTarifa = tipoTarifa;
+    }
+
+    public String getZonaParking() {
+        return zonaParking;
+    }
+
+    public void setZonaParking(String zonaParking) {
+        this.zonaParking = zonaParking;
+    }
+
+    public String getTipoZona() {
+        return tipoZona;
+    }
+
+    public void setTipoZona(String tipoZona) {
+        this.tipoZona = tipoZona;
+    }
+
+    public Double getPrecioBase() {
+        return precioBase;
+    }
+
+    public void setPrecioBase(Double precioBase) {
+        this.precioBase = precioBase;
+    }
+
+    public Double getPrecioAdicional() {
+        return precioAdicional;
+    }
+
+    public void setPrecioAdicional(Double precioAdicional) {
+        this.precioAdicional = precioAdicional;
+    }
+
+    public Double getMontoTotal() {
+        return montoTotal;
+    }
+
+    public void setMontoTotal(Double montoTotal) {
+        this.montoTotal = montoTotal;
+    }
+
+    public int getIdMetodoPago() {
+        return idMetodoPago;
+    }
+
+    public void setIdMetodoPago(int idMetodoPago) {
+        this.idMetodoPago = idMetodoPago;
+    }
+
+    public Date getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(Date fechaPago) {
+        this.fechaPago = fechaPago;
+    }
+    
+    
+    
+}
