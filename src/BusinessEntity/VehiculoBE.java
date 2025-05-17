@@ -44,7 +44,7 @@ public class VehiculoBE extends AuditoriaAbs {
         return placa;
     }
     
-    public void setMatricula(String placa) {
+    public void setPlaca(String placa) {
         this.placa = placa;
     }
     

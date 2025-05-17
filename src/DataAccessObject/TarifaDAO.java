@@ -5,8 +5,12 @@
 package DataAccessObject;
 
 import BusinessEntity.TarifaBE;
+import java.sql.PreparedStatement;
 import java.util.List;
-
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  *
@@ -16,27 +20,111 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
 
     @Override
     public boolean Create(TarifaBE input) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean result=false;
+        
+        try{
+            String SQL = "INSERT tarifa"
+                    + "("
+                        + "id,"
+                        + "idTipoZona,"
+                        + "idTipoVehiculo"
+                    + ")"
+                    + "VALUES"
+                    + "(?,?,?)";
+            PreparedStatement pst= getConexion().prepareStatement(SQL);
+            pst.setInt(5, input.getId());
+            pst.setInt(5, input.getIdTipoZona());
+            pst.setInt(5, input.getIdTipoVehiculo());
+            
+            result = pst.execute();            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public TarifaBE Read(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       TarifaBE item = new TarifaBE();
+        try{
+            String SQL ="SELECT * FROM tarifa WHERE id=? and activo = 1";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setString(1, id);
+            ResultSet res = pst.executeQuery(); 
+            
+            while(res.next()){
+                item.setId(Integer.parseInt(id));
+                item.setIdTipoZona(res.getInt("idTipoZona"));
+                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));          
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return item;
     }
 
     @Override
     public List<TarifaBE> ReadAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<TarifaBE> lst = null; 
+        try{
+            String SQL = "SELECT * FROM tarifa WHERE activo = 1";
+            Statement stm = getConexion().createStatement();
+            ResultSet res = stm.executeQuery(SQL);
+            lst = new ArrayList<>(); 
+            while(res.next()){
+                TarifaBE item = new TarifaBE();
+                item.setId(res.getInt("id"));
+                item.setIdTipoZona(res.getInt("idTipoZona"));
+                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));   
+                
+                lst.add(item);
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return lst;
     }
 
     @Override
     public boolean Update(TarifaBE input) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean result = false;
+        try{
+            String SQL="UPDATE tarifa "
+                    + "SET "
+                        + "idTipoZona=?,"
+                        + "idTipoVehiculo=?"
+                    + "WHERE "
+                        + "id=?";
+            
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            
+            pst.setInt(1, input.getIdTipoZona());
+            pst.setInt(2, input.getIdTipoVehiculo());
+            pst.setInt(3, input.getId());
+   
+            result = pst.execute();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public boolean Delete(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean result = false;
+        try {
+            String SQL="UPDATE tarifa "
+                    + "SET "
+                        + "activo=0"
+                    + "WHERE "
+                        + "id=?";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setString(1, id);
+            result = pst.execute(); 
+        }catch(Exception e){
+            System.out.println(e.getMessage()); 
+        }        
+        return result;
     }
 
     

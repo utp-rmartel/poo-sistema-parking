@@ -24,7 +24,7 @@ public class EmpleadoDAO extends ConexionMySQL implements IBaseDAO<EmpleadoBE>{
         boolean result=false;
         
         try{
-            String SQL = "INSERT empleados"
+            String SQL = "INSERT empleado"
                     + "("
                         + "id,"
                         + "nombre,"
@@ -54,7 +54,7 @@ public class EmpleadoDAO extends ConexionMySQL implements IBaseDAO<EmpleadoBE>{
     public EmpleadoBE Read(String id) {
         EmpleadoBE item = new EmpleadoBE();
         try{
-            String SQL ="SELECT * FROM empleados WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM empleado WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
@@ -77,7 +77,7 @@ public class EmpleadoDAO extends ConexionMySQL implements IBaseDAO<EmpleadoBE>{
     public List<EmpleadoBE> ReadAll() {
        List<EmpleadoBE> lst = null; 
         try{
-            String SQL = "SELECT * FROM empleados WHERE activo = 1";
+            String SQL = "SELECT * FROM empleado WHERE activo = 1";
             Statement stm = getConexion().createStatement();
             ResultSet res = stm.executeQuery(SQL);
             lst = new ArrayList<>(); 
@@ -102,7 +102,7 @@ public class EmpleadoDAO extends ConexionMySQL implements IBaseDAO<EmpleadoBE>{
     public boolean Update(EmpleadoBE input) {
         boolean result = false;
         try{
-            String SQL="UPDATE empleados "
+            String SQL="UPDATE empleado "
                     + "SET "
                         + "nombre=?,"
                         + "apellidos=?,"
@@ -132,7 +132,7 @@ public class EmpleadoDAO extends ConexionMySQL implements IBaseDAO<EmpleadoBE>{
     public boolean Delete(String id) {
         boolean result = false;
         try {
-            String SQL="UPDATE empleados "
+            String SQL="UPDATE empleado "
                     + "SET "
                         + "activo=0"
                     + "WHERE "

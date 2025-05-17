@@ -22,7 +22,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
         boolean result=false;
         
         try{
-            String SQL = "INSERT clientes"
+            String SQL = "INSERT cliente"
                     + "("
                         + "id,"
                         + "nombre,"
@@ -54,7 +54,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
     public ClienteBE Read(String id) {
         ClienteBE item = new ClienteBE();
         try{
-            String SQL ="SELECT * FROM clientes WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM cliente WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
@@ -78,7 +78,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
     public List<ClienteBE> ReadAll() {
         List<ClienteBE> lst = null; 
         try{
-            String SQL = "SELECT * FROM clientes WHERE activo = 1";
+            String SQL = "SELECT * FROM cliente WHERE activo = 1";
             Statement stm = getConexion().createStatement();
             ResultSet res = stm.executeQuery(SQL);
             lst = new ArrayList<>(); 
@@ -104,7 +104,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
     public boolean Update(ClienteBE input) {
         boolean result = false;
         try{
-            String SQL="UPDATE clientes "
+            String SQL="UPDATE cliente "
                     + "SET "
                         + "nombre=?,"
                         + "apellidos=?,"
@@ -136,7 +136,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
     public boolean Delete(String id) {
         boolean result = false;
         try {
-            String SQL="UPDATE clientes "
+            String SQL="UPDATE cliente "
                     + "SET "
                         + "activo=0"
                     + "WHERE "

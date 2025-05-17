@@ -16,9 +16,9 @@ import java.sql.DatabaseMetaData;
 public class ConexionMySQL {
     //Atributos
     //mysql://root:CCLwuwLtOAGMcOoPATxKGYOJILKngkZu@hopper.proxy.rlwy.net:55324/railway
-    private String StrConxMySQL ="";
-    private String StrUserMySQL ="";
-    private String StrPassMySQL ="";
+    private String StrConxMySQL ="jdbc:mysql://localhost:3306/bd_parking";
+    private String StrUserMySQL ="root";
+    private String StrPassMySQL ="rootpassword";
     private Connection Conexion;
     //Constructor
     public ConexionMySQL() {
@@ -35,6 +35,7 @@ public class ConexionMySQL {
                         + dm.getDatabaseProductVersion());
                 System.out.println("Driver Name:" + dm.getDriverName());
                 System.out.println("Driver Version:" + dm.getDriverVersion());
+                
             }
         }catch(ClassNotFoundException | SQLException e){
             System.out.println(e.getMessage());

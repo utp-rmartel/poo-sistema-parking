@@ -25,7 +25,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
          boolean result=false;
         
         try{
-            String SQL = "INSERT estacionamientos"
+            String SQL = "INSERT estacionamiento"
                     + "("
                         + "id,"
                         + "idVehiculo,"
@@ -58,7 +58,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
     public EstacionamientoBE Read(String id) {
         EstacionamientoBE item = new EstacionamientoBE();
         try{
-            String SQL ="SELECT * FROM estacionamientos WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM estacionamiento WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
@@ -83,7 +83,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
     public List<EstacionamientoBE> ReadAll() {
         List<EstacionamientoBE> lst = null; 
         try{
-            String SQL = "SELECT * FROM estacionamientos WHERE activo = 1";
+            String SQL = "SELECT * FROM estacionamiento WHERE activo = 1";
             Statement stm = getConexion().createStatement();
             ResultSet res = stm.executeQuery(SQL);
             lst = new ArrayList<>(); 
@@ -110,7 +110,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
     public boolean Update(EstacionamientoBE input) {
         boolean result = false;
         try{
-            String SQL="UPDATE estacionamientos "
+            String SQL="UPDATE estacionamiento "
                     + "SET "
                         + "idVehiculo=?,"
                         + "idZonaParking=?,"
@@ -142,7 +142,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
     public boolean Delete(String id) {
         boolean result = false;
         try {
-            String SQL="UPDATE estacionamientos "
+            String SQL="UPDATE estacionamiento "
                     + "SET "
                         + "activo=0"
                     + "WHERE "

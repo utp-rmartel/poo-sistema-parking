@@ -23,7 +23,7 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
         boolean result=false;
         
         try{
-              String SQL = "INSERT clientes"
+              String SQL = "INSERT comprobante"
                     + "("
                         + "id,"
                         + "idEstacionamiento,"
@@ -63,7 +63,7 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
     public ComprobanteBE Read(String id) {
         ComprobanteBE item = new ComprobanteBE();
         try{
-            String SQL ="SELECT * FROM comprobantes WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM comprobante WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
@@ -91,7 +91,7 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
     public List<ComprobanteBE> ReadAll() {
         List<ComprobanteBE> lst = null; 
         try{
-            String SQL = "SELECT * FROM comprobantes WHERE activo = 1";
+            String SQL = "SELECT * FROM comprobante WHERE activo = 1";
             Statement stm = getConexion().createStatement();
             ResultSet res = stm.executeQuery(SQL);
             lst = new ArrayList<>(); 
@@ -122,7 +122,7 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
     public boolean Update(ComprobanteBE input) {
          boolean result = false;
         try{
-            String SQL="UPDATE comprobantes "
+            String SQL="UPDATE comprobante "
                     + "SET "
                         + "idEstacionamiento=?,"
                         + "numeroComprobante=?,"
@@ -162,7 +162,7 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
     public boolean Delete(String id) {
         boolean result = false;
         try {
-            String SQL="UPDATE comprobantes "
+            String SQL="UPDATE comprobante "
                     + "SET "
                         + "activo=0"
                     + "WHERE "
