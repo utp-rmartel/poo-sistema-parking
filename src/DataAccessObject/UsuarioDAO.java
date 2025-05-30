@@ -49,7 +49,7 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE>{
 
     @Override
     public UsuarioBE Read(String id) {
-        UsuarioBE item = new UsuarioBE();
+        UsuarioBE item = null;
         try{
             String SQL ="SELECT * FROM usuario WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
@@ -57,6 +57,7 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE>{
             ResultSet res = pst.executeQuery(); 
             
             while(res.next()){
+                item = new UsuarioBE();
                 item.setId(UUID.fromString(id));
                 item.setNombreUsuario(res.getString("nombreUsuario"));
                 item.setContrasenia(res.getString("contrasenia"));
@@ -140,6 +141,26 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE>{
         return result;
     }
 
-    
+    public UsuarioBE GetByUserName(String nombreUsuario) {
+        UsuarioBE item = null;
+        try{
+            String SQL ="SELECT * FROM Usuario WHERE nombreUsuario=? and activo = 1";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setString(1, nombreUsuario);
+            ResultSet res = pst.executeQuery(); 
+            
+            while(res.next()){
+                item = new UsuarioBE();
+                item.setId(UUID.fromString(res.getString("id")));
+                item.setNombreUsuario(res.getString("nombreUsuario"));
+                item.setContrasenia(res.getString("contrasenia"));
+                item.setIdRol(res.getInt("idRol"));
+                item.setIdEmpleado(UUID.fromString(res.getString("idEmpleado")));
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return item;
+    }
     
 }

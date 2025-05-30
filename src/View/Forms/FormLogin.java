@@ -4,6 +4,10 @@
  */
 package View.Forms;
 
+import BusinessLogic.UsuarioBL;
+import DTOs.UsuarioLoginDto;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Royss
@@ -13,11 +17,13 @@ public class FormLogin extends javax.swing.JFrame {
     /**
      * Creates new form FormLogin
      */
+    private UsuarioBL usuarioBL;
+
     public FormLogin() {
         initComponents();
         this.pack();
         this.setLocationRelativeTo(null);
-        
+        usuarioBL = new UsuarioBL();
     }
 
     /**
@@ -29,20 +35,20 @@ public class FormLogin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
+        txtUsuario = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtContrasenia = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         btnIngresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jTextField1.setName("txtUsuario"); // NOI18N
+        txtUsuario.setName("txtUsuario"); // NOI18N
 
         jLabel1.setText("Usuario");
 
-        jTextField2.setName("txtContrasenia"); // NOI18N
+        txtContrasenia.setName("txtContrasenia"); // NOI18N
 
         jLabel2.setText("Contraseña");
 
@@ -63,9 +69,9 @@ public class FormLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel2)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(77, 77, 77)
                         .addComponent(btnIngresar)
@@ -78,11 +84,11 @@ public class FormLogin extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(btnIngresar)
                 .addContainerGap(35, Short.MAX_VALUE))
@@ -92,8 +98,33 @@ public class FormLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        FormMenu fMenu = new FormMenu();
-        fMenu.setVisible(true);
+
+        String usuarioValue = txtUsuario.getText();
+        String contraseniaValue = txtContrasenia.getText();
+
+        if (usuarioValue == null || usuarioValue.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Debe ingresar el usuario", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        if (contraseniaValue == null || contraseniaValue.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Debe ingresar la contraseña", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        try {
+            UsuarioLoginDto usuarioLoginDto = new UsuarioLoginDto();
+            usuarioLoginDto.setUsuario(usuarioValue);
+            usuarioLoginDto.setContrasenia(contraseniaValue);
+
+            usuarioBL.iniciarSesion(usuarioLoginDto);
+
+            FormMenu fMenu = new FormMenu();
+            fMenu.setVisible(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Mensaje", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     /**
@@ -135,7 +166,7 @@ public class FormLogin extends javax.swing.JFrame {
     private javax.swing.JButton btnIngresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField txtContrasenia;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

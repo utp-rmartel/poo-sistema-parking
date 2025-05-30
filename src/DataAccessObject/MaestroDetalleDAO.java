@@ -26,7 +26,7 @@ public class MaestroDetalleDAO extends ConexionMySQL implements IBaseDAO<Maestro
     public MaestroDetalleBE Read(String id) {
         MaestroDetalleBE item = new MaestroDetalleBE();
         try{
-            String SQL ="SELECT * FROM maestrodetalle WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM MaestroDetalle WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
@@ -50,9 +50,10 @@ public class MaestroDetalleDAO extends ConexionMySQL implements IBaseDAO<Maestro
     public List<MaestroDetalleBE> ReadAllByMaestro(int idMaestro) {
         List<MaestroDetalleBE> lst = null; 
         try{
-            String SQL = "SELECT * FROM maestrodetalle WHERE activo = 1";
-            Statement stm = getConexion().createStatement();
-            ResultSet res = stm.executeQuery(SQL);
+            String SQL = "SELECT * FROM MaestroDetalle WHERE idMaestro=? and activo = 1";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setString(1, String.valueOf(idMaestro));
+            ResultSet res = pst.executeQuery();
             lst = new ArrayList<>(); 
             while(res.next()){
                 MaestroDetalleBE item = new MaestroDetalleBE();

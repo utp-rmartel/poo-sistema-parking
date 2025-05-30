@@ -32,9 +32,9 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
                     + "VALUES"
                     + "(?,?,?)";
             PreparedStatement pst= getConexion().prepareStatement(SQL);
-            pst.setInt(5, input.getId());
-            pst.setInt(5, input.getIdTipoZona());
-            pst.setInt(5, input.getIdTipoVehiculo());
+            pst.setInt(1, input.getId());
+            pst.setInt(2, input.getIdTipoZona());
+            pst.setInt(3, input.getIdTipoVehiculo());
             
             result = pst.execute();            
         }catch(Exception e){

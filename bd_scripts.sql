@@ -165,3 +165,46 @@ CREATE TABLE Comprobante (
     fechaModifica DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     activo BOOLEAN NOT NULL DEFAULT TRUE
 );
+
+//INSERT
+INSERT INTO Maestro (tabla) VALUES ('Tipo Documento');
+INSERT INTO Maestro (tabla) VALUES ('Roles');
+
+
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (1, 'DNI');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (1, 'CEX');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (2, 'Administrador');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (2, 'Recepcionista');
+
+
+INSERT INTO Empleado (
+    id,
+    nombre,
+    apellidos,
+    idTipoDocumento,
+    documento,
+    telefono
+) VALUES (
+    uuid(),
+    'Juan',
+    'Pérez Gómez',
+    1,
+    '12345678',
+    '999888777'
+);
+
+
+INSERT INTO Usuario (
+    id,
+    nombreUsuario,
+    contrasenia,
+    idRol,
+    idEmpleado
+) VALUES (
+    uuid(),
+    'jperez',
+    '123456',
+    3, 
+    (select id from Empleado where documento = '12345678' limit 1)
+);
+
