@@ -20,7 +20,7 @@ public class ApiService {
     private String BASE_URL = "";
     private final HttpClient httpClient;
     private final Gson gson;
-    private String Token = "2fea3a9b6190f478789a8086ae70f6eef79facd762cdb4d2ce645e7fe20757aa";
+    private String Token = "";
 
     public ApiService(String baseUrl) {
         this.BASE_URL = baseUrl;
