@@ -15,18 +15,20 @@ import Services.ApiService;
  */
 public class ClienteBL {
 
-    private ApiService apiService;
+    private ApiService apiServiceSunat;
+    private ApiService apiServiceSunarp;
     private ClienteDAO clienteDAO;
 
     public ClienteBL() {
-        this.apiService = new ApiService("https://apiperu.dev/api");
+        this.apiServiceSunat = new ApiService("https://apiperu.dev/api");
+        this.apiServiceSunarp = new ApiService("http://localhost:8000");
         this.clienteDAO = new ClienteDAO();
     }
 
     public ClienteSunatDTO buscarClienteDNI(String numeroDocumento) {
 
         String path = "/dni/" + numeroDocumento;
-        ApiResponseDTO<ClienteSunatDTO> response = this.apiService.methodGET(path, ClienteSunatDTO.class);
+        ApiResponseDTO<ClienteSunatDTO> response = this.apiServiceSunat.methodGET(path, ClienteSunatDTO.class);
         
         return response.getData();
     }

@@ -14,7 +14,6 @@ import java.util.UUID;
 public class VehiculoBE extends AuditoriaAbs {
     private UUID id;
     private String placa;
-    private String tipo;
     private String marca;
     private String modelo;
     private String color;
@@ -23,9 +22,8 @@ public class VehiculoBE extends AuditoriaAbs {
     public VehiculoBE() {
     }
     
-    public VehiculoBE(String placa, String tipo, String marca, String modelo, String color, UUID idCliente) {
+    public VehiculoBE(String placa, String marca, String modelo, String color, UUID idCliente) {
         this.placa = placa;
-        this.tipo = tipo;
         this.marca = marca;
         this.modelo = modelo;
         this.color = color;
@@ -46,14 +44,6 @@ public class VehiculoBE extends AuditoriaAbs {
     
     public void setPlaca(String placa) {
         this.placa = placa;
-    }
-    
-    public String getTipo() {
-        return tipo;
-    }
-    
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
     
     public String getMarca() {

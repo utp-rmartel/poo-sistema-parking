@@ -10,8 +10,10 @@ import BusinessEntity.ZonaParkingBE;
 import BusinessLogic.ClienteBL;
 import BusinessLogic.MaestroDetalleBL;
 import BusinessLogic.TarifaPrecioBL;
+import BusinessLogic.VehiculoBL;
 import BusinessLogic.ZonaParkingBL;
 import DTOs.ClienteSunatDTO;
+import DTOs.VehiculoSunarpDTO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,21 +29,23 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
     private TarifaPrecioBL tarifaPrecioBL;
     private ZonaParkingBL zonaParkingBL;
     private ClienteBL clienteBL;
-    
+    private VehiculoBL vehiculoBL;
+
     private List<MaestroDetalleBE> tipoDocumentos;
-    
+
     public ModalEstacionamiento(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         deshabilitarPorDefecto();
         habilitarComponentesClientes(true);
-        habilitarComponentesVehiculo(false); 
-        
+        habilitarComponentesVehiculo(false);
+
         maestroDetalleBL = new MaestroDetalleBL();
         tarifaPrecioBL = new TarifaPrecioBL();
         zonaParkingBL = new ZonaParkingBL();
         clienteBL = new ClienteBL();
-        
+        vehiculoBL = new VehiculoBL();
+
         cargarTipoDocumento();
     }
 
@@ -176,6 +180,11 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
         txtPlaca.setName("txtUsuario"); // NOI18N
 
         btnBuscarPlaca.setText("Buscar");
+        btnBuscarPlaca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarPlacaActionPerformed(evt);
+            }
+        });
 
         jLabel12.setText("Tarifa Precio");
 
@@ -254,9 +263,9 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
                                         .addComponent(txtEstado)))
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel6)
-                                        .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(18, 18, 18)
+                                        .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel6))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel16)))
@@ -309,13 +318,14 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel16))
+                        .addComponent(jLabel16)
+                        .addGap(28, 28, 28))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -417,22 +427,27 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
         return;
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
+    private void btnBuscarPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPlacaActionPerformed
+        VehiculoSunarpDTO vehiculoSunarp = this.vehiculoBL.buscarVehiculoPorPlaca(txtPlaca.getText());
+        return;
+    }//GEN-LAST:event_btnBuscarPlacaActionPerformed
+
     private void cargarTipoDocumento() {
         tipoDocumentos = this.maestroDetalleBL.GetAllMaestroDetalle(1);
-        
+
         cboTipoDocumento.removeAll();
         cboTipoDocumento.removeAllItems();
         for (MaestroDetalleBE td : tipoDocumentos) {
             cboTipoDocumento.addItem(td.getValor());
         }
     }
-    
+
     private void habilitarComponentesClientes(Boolean flag) {
         cboTipoDocumento.setEnabled(flag);
         txtNumeroDocumento.setEnabled(flag);
         btnBuscarCliente.setEnabled(flag);
     }
-    
+
     private void habilitarComponentesVehiculo(Boolean flag) {
         txtPlaca.setEnabled(flag);
         btnBuscarPlaca.setEnabled(flag);

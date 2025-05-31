@@ -28,23 +28,21 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
                     + "("
                         + "id,"
                         + "placa,"
-                        + "tipo,"
                         + "marca,"
                         + "modelo,"
                         + "color,"
                         + "idCliente"
                     + ")"
                     + "VALUES"
-                    + "(?,?,?,?,?,?,?)";
+                    + "(?,?,?,?,?,?)";
             
             PreparedStatement pst= getConexion().prepareStatement(SQL);
             pst.setString(1, input.getId().toString());
             pst.setString(2, input.getPlaca());
-            pst.setString(3, input.getTipo());
-            pst.setString(4, input.getMarca());
-            pst.setString(5, input.getModelo());
-            pst.setString(6, input.getColor());
-            pst.setString(7, input.getIdCliente().toString());
+            pst.setString(3, input.getMarca());
+            pst.setString(4, input.getModelo());
+            pst.setString(5, input.getColor());
+            pst.setString(6, input.getIdCliente().toString());
             
             result = pst.execute();            
         }catch(Exception e){
@@ -57,7 +55,7 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
     public VehiculoBE Read(String id) {
         VehiculoBE item = new VehiculoBE();
         try{
-            String SQL ="SELECT * FROM vehiculo WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM Vehiculo WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
@@ -65,7 +63,6 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
             while(res.next()){
                 item.setId(UUID.fromString(id));
                 item.setPlaca(res.getString("placa"));
-                item.setTipo(res.getString("tipo"));
                 item.setMarca(res.getString("marca"));
                 item.setModelo(res.getString("modelo"));
                 item.setColor(res.getString("color"));
@@ -81,7 +78,7 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
     public List<VehiculoBE> ReadAll() {
         List<VehiculoBE> lst = null; 
         try{
-            String SQL = "SELECT * FROM vehiculo WHERE activo = 1";
+            String SQL = "SELECT * FROM Vehiculo WHERE activo = 1";
             Statement stm = getConexion().createStatement();
             ResultSet res = stm.executeQuery(SQL);
             lst = new ArrayList<>(); 
@@ -89,7 +86,6 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
                 VehiculoBE item = new VehiculoBE();
                 item.setId(UUID.fromString(res.getString("id")));
                 item.setPlaca(res.getString("placa"));
-                item.setTipo(res.getString("tipo"));
                 item.setMarca(res.getString("marca"));
                 item.setModelo(res.getString("modelo"));
                 item.setColor(res.getString("color"));
@@ -110,7 +106,6 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
             String SQL="UPDATE vehiculo "
                     + "SET "
                         + "placa=?,"
-                        + "tipo=?,"
                         + "marca=?,"
                         + "modelo=?,"
                         + "color=?,"
@@ -121,12 +116,11 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             
             pst.setString(1, input.getPlaca());
-            pst.setString(2, input.getTipo());
-            pst.setString(3, input.getMarca());
-            pst.setString(4, input.getModelo());
-            pst.setString(5, input.getColor());
-            pst.setString(6, input.getIdCliente().toString());
-            pst.setString(7, input.getId().toString());
+            pst.setString(2, input.getMarca());
+            pst.setString(3, input.getModelo());
+            pst.setString(4, input.getColor());
+            pst.setString(5, input.getIdCliente().toString());
+            pst.setString(6, input.getId().toString());
 
             result = pst.execute();
         }catch(Exception e){
