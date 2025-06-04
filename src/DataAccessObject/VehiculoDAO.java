@@ -53,7 +53,7 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
 
     @Override
     public VehiculoBE Read(String id) {
-        VehiculoBE item = new VehiculoBE();
+        VehiculoBE item = null;
         try{
             String SQL ="SELECT * FROM Vehiculo WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
@@ -61,7 +61,31 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
             ResultSet res = pst.executeQuery(); 
             
             while(res.next()){
+                item = new VehiculoBE();
                 item.setId(UUID.fromString(id));
+                item.setPlaca(res.getString("placa"));
+                item.setMarca(res.getString("marca"));
+                item.setModelo(res.getString("modelo"));
+                item.setColor(res.getString("color"));
+                item.setIdCliente(UUID.fromString(res.getString("idCliente")));             
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return item;
+    }
+    
+    public VehiculoBE ReadByPlaca(String placa) {
+        VehiculoBE item = null;
+        try{
+            String SQL ="SELECT * FROM Vehiculo WHERE placa=? and activo = 1";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setString(1, placa);
+            ResultSet res = pst.executeQuery(); 
+            
+            while(res.next()){
+                item = new VehiculoBE();
+                item.setId(UUID.fromString(res.getString("id")));
                 item.setPlaca(res.getString("placa"));
                 item.setMarca(res.getString("marca"));
                 item.setModelo(res.getString("modelo"));

@@ -11,9 +11,8 @@ package BusinessEntity;
 public class ZonaParkingBE extends AuditoriaAbs{
     private int id;
     private String nombre;
-    private String descripcion;
     private int idEstado;
-    private int idTipoZona;
+    private int idTipoVehiculo;
 
     public ZonaParkingBE() {
     }
@@ -34,14 +33,6 @@ public class ZonaParkingBE extends AuditoriaAbs{
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
     public int getIdEstado() {
         return idEstado;
     }
@@ -50,13 +41,14 @@ public class ZonaParkingBE extends AuditoriaAbs{
         this.idEstado = idEstado;
     }
 
-    public int getIdTipoZona() {
-        return idTipoZona;
+    public int getIdTipoVehiculo() {
+        return idTipoVehiculo;
     }
 
-    public void setIdTipoZona(int idTipoZona) {
-        this.idTipoZona = idTipoZona;
+    public void setIdTipoVehiculo(int idTipoVehiculo) {
+        this.idTipoVehiculo = idTipoVehiculo;
     }
     
     
+
 }

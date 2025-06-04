@@ -38,12 +38,13 @@ CREATE TABLE Cliente (
 CREATE TABLE Vehiculo (
     id VARCHAR(40) PRIMARY KEY,
     placa VARCHAR(20) UNIQUE,
-    tipo VARCHAR(50),
     marca VARCHAR(50),
     modelo VARCHAR(50),
     color VARCHAR(30),
     idCliente VARCHAR(40),
     FOREIGN KEY (idCliente) REFERENCES Cliente(id),
+    idTipoVehiculo INT,
+    FOREIGN KEY (idTipoVehiculo) REFERENCES MaestroDetalle(id),
     usuarioRegistro VARCHAR(100) NOT NULL DEFAULT '',
     fechaRegistro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     usuarioModifica VARCHAR(100) DEFAULT '',
@@ -83,24 +84,9 @@ CREATE TABLE Usuario (
 
 CREATE TABLE ZonaParking (
     id INT PRIMARY KEY,
-    nombreZona VARCHAR(100),
-    descripcion TEXT,
+    nombre VARCHAR(100),
     idEstado INT,
     FOREIGN KEY (idEstado) REFERENCES MaestroDetalle(id),
-    idTipoZona INT,
-    FOREIGN KEY (idTipoZona) REFERENCES MaestroDetalle(id),
-    usuarioRegistro VARCHAR(100) NOT NULL DEFAULT '',
-    fechaRegistro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    usuarioModifica VARCHAR(100) DEFAULT '',
-    fechaModifica DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    activo BOOLEAN NOT NULL DEFAULT TRUE
-);
-
-CREATE TABLE Tarifa (
-    id INT PRIMARY KEY,
-    nombre VARCHAR(100),
-    idTipoZona INT,
-    FOREIGN KEY (idTipoZona) REFERENCES MaestroDetalle(id),
     idTipoVehiculo INT,
     FOREIGN KEY (idTipoVehiculo) REFERENCES MaestroDetalle(id),
     usuarioRegistro VARCHAR(100) NOT NULL DEFAULT '',
@@ -110,12 +96,11 @@ CREATE TABLE Tarifa (
     activo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE TarifaPrecio (
+CREATE TABLE Tarifa (
     id VARCHAR(40) PRIMARY KEY,
-    idTarifa INT,
-    FOREIGN KEY (idTarifa) REFERENCES Tarifa(id),
-    idTipoZona INT,
-    FOREIGN KEY (idTipoZona) REFERENCES MaestroDetalle(id),
+    nombre VARCHAR(100),
+    idTipoVehiculo INT,
+    FOREIGN KEY (idTipoVehiculo) REFERENCES MaestroDetalle(id),
     precioBase DECIMAL(10, 2) DEFAULT 0,
     precioAdicional DECIMAL(10, 2)  DEFAULT 0,
     usuarioRegistro VARCHAR(100) NOT NULL DEFAULT '',
@@ -123,21 +108,22 @@ CREATE TABLE TarifaPrecio (
     usuarioModifica VARCHAR(100) DEFAULT '',
     fechaModifica DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     activo BOOLEAN NOT NULL DEFAULT TRUE
+
 );
 
 
 CREATE TABLE Estacionamiento (
     id VARCHAR(40) PRIMARY KEY,
-    fechaHoraIngreso DATETIME,
+    fechaHoraEntrada DATETIME,
     fechaHoraSalida DATETIME,
     idVehiculo VARCHAR(40),
     idZonaParking INT,
-    idTarifaPrecio VARCHAR(40),
+    idTarifa VARCHAR(40),
     idEstado INT,
     cantidad INT,
     FOREIGN KEY (idVehiculo) REFERENCES Vehiculo(id),
     FOREIGN KEY (idZonaParking) REFERENCES ZonaParking(id),
-    FOREIGN KEY (idTarifaPrecio) REFERENCES TarifaPrecio(id),
+    FOREIGN KEY (idTarifa) REFERENCES Tarifa(id),
     FOREIGN KEY (idEstado) REFERENCES MaestroDetalle(id),
     usuarioRegistro VARCHAR(100) NOT NULL DEFAULT '',
     fechaRegistro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -150,14 +136,16 @@ CREATE TABLE Comprobante (
     id VARCHAR(40) PRIMARY KEY,
     idEstacionamiento VARCHAR(40),
     FOREIGN KEY (idEstacionamiento) REFERENCES Estacionamiento(id),
+    numeroComprobante VARCHAR(40),
     tipoTarifa VARCHAR(40),
     zonaParking VARCHAR(40),
-    tipoZona VARCHAR(40),
     precionBase DECIMAL(10, 2),
     precionAdicional DECIMAL(10, 2),
     montoTotal DECIMAL(10, 2),
     idMetodoPago INT,
     FOREIGN KEY (idMetodoPago) REFERENCES MaestroDetalle(id),
+    idEstado INT,
+    FOREIGN KEY (idEstado) REFERENCES MaestroDetalle(id),
     fechaPago DATETIME NOT NULL,
     usuarioRegistro VARCHAR(100) NOT NULL DEFAULT '',
     fechaRegistro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -169,12 +157,32 @@ CREATE TABLE Comprobante (
 //INSERT
 INSERT INTO Maestro (tabla) VALUES ('Tipo Documento');
 INSERT INTO Maestro (tabla) VALUES ('Roles');
+INSERT INTO Maestro (tabla) VALUES ('TipoVehiculo');
+INSERT INTO Maestro (tabla) VALUES ('EstadoZona');
+INSERT INTO Maestro (tabla) VALUES ('EstadoEstacionamiento');
+INSERT INTO Maestro (tabla) VALUES ('MetodoPago');
+INSERT INTO Maestro (tabla) VALUES ('EstadoComprobante');
 
 
 INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (1, 'DNI');
 INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (1, 'CEX');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (1, 'PASS');
 INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (2, 'Administrador');
 INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (2, 'Recepcionista');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (3, 'CARRO');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (3, 'MOTOCICLETA');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (4, 'LIBRE');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (4, 'OCUPADO');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (4, 'EN MANTENIMIENTO');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (4, 'FUERA DE SERVICIO');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (5, 'EN CURSO');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (5, 'FINALIZADO');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (6, 'EFECTVO');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (6, 'TARJETA');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (6, 'YAPE/PLIN');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (7, 'PENDIENTE');
+INSERT INTO MaestroDetalle (idMaestro, valor) VALUES (7, 'PAGADO');
+
 
 
 INSERT INTO Empleado (
@@ -207,4 +215,28 @@ INSERT INTO Usuario (
     3, 
     (select id from Empleado where documento = '12345678' limit 1)
 );
+
+insert into Cliente
+(
+    id,
+    nombre,
+    apellidos,
+    idTipoDocumento,
+    documento
+)
+VALUES
+(
+    uuid(),
+    'Juan',
+    'Ramirez',
+    1,
+    '98765432'
+),
+(
+    uuid(),
+    'Kiara',
+    'Lopez',
+    2,
+    '12345678'
+)
 

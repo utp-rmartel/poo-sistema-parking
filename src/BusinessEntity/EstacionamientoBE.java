@@ -4,7 +4,6 @@
  */
 package BusinessEntity;
 
-
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,23 +11,23 @@ import java.util.UUID;
  *
  * @author Royss
  */
-public class EstacionamientoBE extends AuditoriaAbs{
+public class EstacionamientoBE extends AuditoriaAbs {
+
     private UUID id;
     private UUID idVehiculo;
     private int idZonaParking;
-    private UUID idTarifaPrecio;
+    private UUID idTarifa;
+    private int idEstado;
     private Date fechaHoraEntrada;
     private Date fechaHoraSalida;
-    private int idEstado;
     private int cantidad;
 
     public EstacionamientoBE() {
     }
-    
+
     public EstacionamientoBE(UUID id) {
         this.id = id;
     }
-    
 
     public UUID getId() {
         return id;
@@ -54,12 +53,12 @@ public class EstacionamientoBE extends AuditoriaAbs{
         this.idZonaParking = idZonaParking;
     }
 
-    public UUID getIdTarifaPrecio() {
-        return idTarifaPrecio;
+    public UUID getIdTarifa() {
+        return idTarifa;
     }
 
-    public void setIdTarifaPrecio(UUID idTarifaPrecio) {
-        this.idTarifaPrecio = idTarifaPrecio;
+    public void setIdTarifa(UUID idTarifa) {
+        this.idTarifa = idTarifa;
     }
 
     public Date getFechaHoraEntrada() {
@@ -93,7 +92,5 @@ public class EstacionamientoBE extends AuditoriaAbs{
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-   
-    
 
 }

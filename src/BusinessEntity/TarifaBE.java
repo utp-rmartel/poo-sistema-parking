@@ -11,8 +11,10 @@ package BusinessEntity;
  */
 public class TarifaBE extends AuditoriaAbs{
    private int id;
-   private int idTipoZona;
+   private String nombre;
    private int idTipoVehiculo;
+   private double precioBase;
+   private double precioAdicional;
 
     public TarifaBE() {
     }
@@ -25,13 +27,31 @@ public class TarifaBE extends AuditoriaAbs{
         this.id = id;
     }
 
-    public int getIdTipoZona() {
-        return idTipoZona;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setIdTipoZona(int idTipoZona) {
-        this.idTipoZona = idTipoZona;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
+
+    public double getPrecioBase() {
+        return precioBase;
+    }
+
+    public void setPrecioBase(double precioBase) {
+        this.precioBase = precioBase;
+    }
+
+    public double getPrecioAdicional() {
+        return precioAdicional;
+    }
+
+    public void setPrecioAdicional(double precioAdicional) {
+        this.precioAdicional = precioAdicional;
+    }
+
+    
 
     public int getIdTipoVehiculo() {
         return idTipoVehiculo;

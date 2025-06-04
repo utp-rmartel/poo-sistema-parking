@@ -52,7 +52,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
 
     @Override
     public ClienteBE Read(String id) {
-        ClienteBE item = new ClienteBE();
+        ClienteBE item =null;
         try{
             String SQL ="SELECT * FROM cliente WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
@@ -60,6 +60,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
             ResultSet res = pst.executeQuery(); 
             
             while(res.next()){
+                item = new ClienteBE();
                 item.setId(UUID.fromString(id));
                 item.setNombre(res.getString("nombre"));
                 item.setApellidos(res.getString("apellidos"));
@@ -68,6 +69,32 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
                 item.setTelefono(res.getString("telefono"));
                 item.setEmail(res.getString("email"));             
             }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return item;
+    }
+    
+    public ClienteBE ReadByDocumento(int tipoDocumento, String documento) {
+        ClienteBE item = null;
+        try{
+            String SQL ="SELECT * FROM Cliente WHERE idTipoDocumento=? and documento=?  and activo = 1";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setInt(1, tipoDocumento);
+            pst.setString(2, documento);
+            ResultSet res = pst.executeQuery(); 
+            
+            while(res.next()){
+                item = new ClienteBE();
+                item.setId(UUID.fromString(res.getString("id")));
+                item.setNombre(res.getString("nombre"));
+                item.setApellidos(res.getString("apellidos"));
+                item.setDocumento(res.getString("documento"));
+                item.setTipoDocumento(res.getInt("tipoDocumento"));
+                item.setTelefono(res.getString("telefono"));
+                item.setEmail(res.getString("email"));             
+            }
+            
         }catch(Exception e){
             System.out.println(e.getMessage());
         }

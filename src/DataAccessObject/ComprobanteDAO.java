@@ -23,14 +23,13 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
         boolean result=false;
         
         try{
-              String SQL = "INSERT comprobante"
+              String SQL = "INSERT Comprobante"
                     + "("
                         + "id,"
                         + "idEstacionamiento,"
                         + "numeroComprobante,"
                         + "tipoTarifa,"
                         + "zonaParking,"
-                        + "tipoZona,"
                         + "precioBase,"
                         + "precioAdicional,"
                         + "montoTotal,"
@@ -38,19 +37,18 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
                         + "fechaPago"
                     + ")"
                     + "VALUES"
-                    + "(?,?,?,?,?,?,?,?,?,?,?)";
+                    + "(?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement pst= getConexion().prepareStatement(SQL);
             pst.setString(1, input.getId().toString());
             pst.setString(2, input.getIdEstacionamiento().toString());
             pst.setString(3, input.getNumeroComprobante());
             pst.setString(4, input.getTipoTarifa());
             pst.setString(5, input.getZonaParking());
-            pst.setString(6, input.getTipoZona());
-            pst.setDouble(7, input.getPrecioBase());
-            pst.setDouble(8, input.getPrecioAdicional());
-            pst.setDouble(9, input.getMontoTotal());
-            pst.setInt(10, input.getIdMetodoPago());
-            pst.setDate(11, (Date) input.getFechaPago());
+            pst.setDouble(6, input.getPrecioBase());
+            pst.setDouble(7, input.getPrecioAdicional());
+            pst.setDouble(8, input.getMontoTotal());
+            pst.setInt(9, input.getIdMetodoPago());
+            pst.setDate(10, (Date) input.getFechaPago());
             
             result = pst.execute();            
         }catch(Exception e){
@@ -63,7 +61,7 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
     public ComprobanteBE Read(String id) {
         ComprobanteBE item = new ComprobanteBE();
         try{
-            String SQL ="SELECT * FROM comprobante WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM Comprobante WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
@@ -74,7 +72,6 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
                 item.setNumeroComprobante(res.getString("numeroComprobante"));
                 item.setTipoTarifa(res.getString("tipoTarifa"));
                 item.setZonaParking(res.getString("zonaParking"));
-                item.setTipoZona(res.getString("tipoZona"));
                 item.setPrecioBase(res.getDouble("precioBase"));
                 item.setPrecioAdicional(res.getDouble("precioAdicional"));
                 item.setMontoTotal(res.getDouble("montoTotal"));
@@ -102,7 +99,6 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
                 item.setNumeroComprobante(res.getString("numeroComprobante"));
                 item.setTipoTarifa(res.getString("tipoTarifa"));
                 item.setZonaParking(res.getString("zonaParking"));
-                item.setTipoZona(res.getString("tipoZona"));
                 item.setPrecioBase(res.getDouble("precioBase"));
                 item.setPrecioAdicional(res.getDouble("precioAdicional"));
                 item.setMontoTotal(res.getDouble("montoTotal"));
@@ -128,7 +124,6 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
                         + "numeroComprobante=?,"
                         + "tipoTarifa=?,"
                         + "zonaParking=?,"
-                        + "tipoZona=?,"
                         + "precioBase=?,"
                         + "precioAdicional=?,"
                         + "montoTotal=?,"
@@ -143,13 +138,12 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
             pst.setString(2, input.getNumeroComprobante());
             pst.setString(3, input.getTipoTarifa());
             pst.setString(4, input.getZonaParking());
-            pst.setString(5, input.getTipoZona());
-            pst.setDouble(6, input.getPrecioBase());
-            pst.setDouble(7, input.getPrecioAdicional());
-            pst.setDouble(8, input.getMontoTotal());
-            pst.setInt(9,input.getIdMetodoPago());
-            pst.setDate(10, (Date) input.getFechaPago());
-            pst.setString(11, input.getId().toString());
+            pst.setDouble(5, input.getPrecioBase());
+            pst.setDouble(6, input.getPrecioAdicional());
+            pst.setDouble(7, input.getMontoTotal());
+            pst.setInt(8,input.getIdMetodoPago());
+            pst.setDate(9, (Date) input.getFechaPago());
+            pst.setString(10, input.getId().toString());
    
             result = pst.execute();
         }catch(Exception e){
@@ -162,7 +156,7 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
     public boolean Delete(String id) {
         boolean result = false;
         try {
-            String SQL="UPDATE comprobante "
+            String SQL="UPDATE Comprobante "
                     + "SET "
                         + "activo=0"
                     + "WHERE "

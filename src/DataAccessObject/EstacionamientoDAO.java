@@ -25,12 +25,12 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
          boolean result=false;
         
         try{
-            String SQL = "INSERT estacionamiento"
+            String SQL = "INSERT Estacionamiento"
                     + "("
                         + "id,"
                         + "idVehiculo,"
                         + "idZonaParking,"
-                        + "idTarifaPrecio,"
+                        + "idTarifa,"
                         + "fechaHoraEntrada,"
                         + "idEstado,"
                         + "cantidad"
@@ -42,7 +42,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
             pst.setString(1, input.getId().toString());
             pst.setString(2, input.getIdVehiculo().toString());
             pst.setInt(3, input.getIdZonaParking());
-            pst.setString(4, input.getIdTarifaPrecio().toString());
+            pst.setString(4, input.getIdTarifa().toString());
             pst.setDate(5, (Date) input.getFechaHoraEntrada());
             pst.setInt(6, input.getIdEstado());
             pst.setInt(7, input.getCantidad());
@@ -67,7 +67,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
                 item.setId(UUID.fromString(id));
                 item.setIdVehiculo(UUID.fromString(res.getString("idVehiculo")));
                 item.setIdZonaParking(res.getInt("idZonaParking"));
-                item.setIdTarifaPrecio(UUID.fromString(res.getString("idTarifaPrecio")));
+                item.setIdTarifa(UUID.fromString(res.getString("idTarifa")));
                 item.setFechaHoraEntrada(res.getDate("fechaHoraEntrada"));
                 item.setFechaHoraSalida(res.getDate("fechaHoraSalida"));
                 item.setIdEstado(res.getInt("idEstado"));   
@@ -92,7 +92,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
                 item.setId(UUID.fromString(res.getString("id")));
                 item.setIdVehiculo(UUID.fromString(res.getString("idVehiculo")));
                 item.setIdZonaParking(res.getInt("idZonaParking"));
-                item.setIdTarifaPrecio(UUID.fromString(res.getString("idTarifaPrecio")));
+                item.setIdTarifa(UUID.fromString(res.getString("idTarifa")));
                 item.setFechaHoraEntrada(res.getDate("fechaHoraEntrada"));
                 item.setFechaHoraSalida(res.getDate("fechaHoraSalida"));
                 item.setIdEstado(res.getInt("idEstado"));   
@@ -114,7 +114,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
                     + "SET "
                         + "idVehiculo=?,"
                         + "idZonaParking=?,"
-                        + "idTarifaPrecio=?,"
+                        + "idTarifa=?,"
                         + "fechaHoraEntrada=?,"
                         + "idEstado=?,"
                         + "cantidad=?"
@@ -125,7 +125,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
                        
             pst.setString(1, input.getIdVehiculo().toString());
             pst.setInt(2, input.getIdZonaParking());
-            pst.setString(3, input.getIdTarifaPrecio().toString());
+            pst.setString(3, input.getIdTarifa().toString());
             pst.setDate(4, (Date) input.getFechaHoraEntrada());
             pst.setInt(5, input.getIdEstado());
             pst.setInt(6, input.getCantidad());

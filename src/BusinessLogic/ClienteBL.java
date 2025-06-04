@@ -4,6 +4,7 @@
  */
 package BusinessLogic;
 
+import BusinessEntity.ClienteBE;
 import DTOs.ApiResponseDTO;
 import DTOs.ClienteSunatDTO;
 import DataAccessObject.ClienteDAO;
@@ -16,21 +17,38 @@ import Services.ApiService;
 public class ClienteBL {
 
     private ApiService apiServiceSunat;
-    private ApiService apiServiceSunarp;
     private ClienteDAO clienteDAO;
 
     public ClienteBL() {
-        this.apiServiceSunat = new ApiService("https://apiperu.dev/api");
-        this.apiServiceSunarp = new ApiService("http://localhost:8000");
+        this.apiServiceSunat = new ApiService("https://apiperu.dev/api", "2fea3a9b6190f478789a8086ae70f6eef79facd762cdb4d2ce645e7fe20757aa");
         this.clienteDAO = new ClienteDAO();
     }
 
-    public ClienteSunatDTO buscarClienteDNI(String numeroDocumento) {
+    public ClienteSunatDTO buscarClienteSunatDNI(String documento) {
 
-        String path = "/dni/" + numeroDocumento;
+        String path = "/dni/" + documento;
         ApiResponseDTO<ClienteSunatDTO> response = this.apiServiceSunat.methodGET(path, ClienteSunatDTO.class);
-        
+
         return response.getData();
+    }
+
+    public ClienteBE buscarClientePorDocumento(int tipoDocumento, String documento) {
+        return clienteDAO.ReadByDocumento(tipoDocumento, documento);
+    }
+
+    public ClienteBE buscarCliente(int tipoDocumento, String documento) {
+        ClienteBE clienteBD = buscarClientePorDocumento(tipoDocumento, documento);
+
+        if (clienteBD != null) {
+            return clienteBD;
+        }
+        
+        if(tipoDocumento != 1) //DNI
+            return null;
+
+        ClienteSunatDTO clienteSunat = buscarClienteSunatDNI(documento);
+
+        return clienteSunat == null ? null : new ClienteBE(clienteSunat.getNombres(), clienteSunat.getApellidoPaterno() + " " + clienteSunat.getApellidoMaterno(), documento);
     }
 
 }

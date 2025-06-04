@@ -23,18 +23,22 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
         boolean result=false;
         
         try{
-            String SQL = "INSERT tarifa"
+            String SQL = "INSERT Tarifa"
                     + "("
                         + "id,"
-                        + "idTipoZona,"
-                        + "idTipoVehiculo"
+                        + "nombre,"    
+                        + "idTipoVehiculo,"
+                        + "precioBase,"
+                        + "precioAdicional"
                     + ")"
                     + "VALUES"
-                    + "(?,?,?)";
+                    + "(?,?,?,?,?)";
             PreparedStatement pst= getConexion().prepareStatement(SQL);
             pst.setInt(1, input.getId());
-            pst.setInt(2, input.getIdTipoZona());
+            pst.setString(2, input.getNombre());
             pst.setInt(3, input.getIdTipoVehiculo());
+            pst.setDouble(4, input.getPrecioBase());
+            pst.setDouble(5, input.getPrecioAdicional());
             
             result = pst.execute();            
         }catch(Exception e){
@@ -47,15 +51,17 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
     public TarifaBE Read(String id) {
        TarifaBE item = new TarifaBE();
         try{
-            String SQL ="SELECT * FROM tarifa WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM Tarifa WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
             
             while(res.next()){
                 item.setId(Integer.parseInt(id));
-                item.setIdTipoZona(res.getInt("idTipoZona"));
-                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));          
+                item.setNombre(res.getString("nombre"));
+                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));  
+                item.setPrecioBase(res.getDouble("precioBase"));
+                item.setPrecioAdicional(res.getDouble("precioAdicional"));
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -74,8 +80,10 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
             while(res.next()){
                 TarifaBE item = new TarifaBE();
                 item.setId(res.getInt("id"));
-                item.setIdTipoZona(res.getInt("idTipoZona"));
-                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));   
+                item.setNombre(res.getString("nombre"));
+                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));  
+                item.setPrecioBase(res.getDouble("precioBase"));
+                item.setPrecioAdicional(res.getDouble("precioAdicional")); 
                 
                 lst.add(item);
             }
@@ -89,18 +97,22 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
     public boolean Update(TarifaBE input) {
         boolean result = false;
         try{
-            String SQL="UPDATE tarifa "
+            String SQL="UPDATE Tarifa "
                     + "SET "
-                        + "idTipoZona=?,"
-                        + "idTipoVehiculo=?"
+                        + "nombre=?,"    
+                        + "idTipoVehiculo=?,"
+                        + "precioBase=?,"
+                        + "precioAdicional=?"
                     + "WHERE "
                         + "id=?";
             
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             
-            pst.setInt(1, input.getIdTipoZona());
+            pst.setString(1, input.getNombre());
             pst.setInt(2, input.getIdTipoVehiculo());
-            pst.setInt(3, input.getId());
+            pst.setDouble(3, input.getPrecioBase());
+            pst.setDouble(4, input.getPrecioAdicional());
+            pst.setInt(5, input.getId());
    
             result = pst.execute();
         }catch(Exception e){

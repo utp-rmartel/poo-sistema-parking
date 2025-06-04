@@ -18,11 +18,11 @@ public class ComprobanteBE extends AuditoriaAbs{
     private String numeroComprobante;
     private String tipoTarifa;
     private String zonaParking;
-    private String tipoZona;
     private Double precioBase;
     private Double precioAdicional;
     private Double montoTotal;
     private int idMetodoPago;
+    private int idEstado;
     private Date fechaPago;
 
     public ComprobanteBE() {
@@ -68,12 +68,12 @@ public class ComprobanteBE extends AuditoriaAbs{
         this.zonaParking = zonaParking;
     }
 
-    public String getTipoZona() {
-        return tipoZona;
+    public int getIdEstado() {
+        return idEstado;
     }
 
-    public void setTipoZona(String tipoZona) {
-        this.tipoZona = tipoZona;
+    public void setIdEstado(int idEstado) {
+        this.idEstado = idEstado;
     }
 
     public Double getPrecioBase() {

@@ -22,6 +22,10 @@ public class ClienteBE extends PersonaAbs  {
         super();
     }
     
+    public ClienteBE(String nombre, String apellidos, String dni) {
+        super(nombre, apellidos, dni);
+    }
+    
     public ClienteBE(String nombre, String apellidos, String dni, String telefono, String email) {
         super(nombre, apellidos, dni);
         this.telefono = telefono;

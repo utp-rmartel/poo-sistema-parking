@@ -18,6 +18,7 @@ public class VehiculoBE extends AuditoriaAbs {
     private String modelo;
     private String color;
     private UUID idCliente;
+    private int idTipoVehiculo;
     
     public VehiculoBE() {
     }

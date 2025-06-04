@@ -20,12 +20,13 @@ public class ApiService {
     private String BASE_URL = "";
     private final HttpClient httpClient;
     private final Gson gson;
-    private String Token = "";
+    private String token = "";
 
-    public ApiService(String baseUrl) {
+    public ApiService(String baseUrl,String token) {
         this.BASE_URL = baseUrl;
         this.httpClient = HttpClient.newHttpClient();
         this.gson = new Gson();
+        this.token = token;
     }
 
     public <T> ApiResponseDTO<T> methodGET(String path, Class<T> clase) {
@@ -35,7 +36,7 @@ public class ApiService {
                     .uri(URI.create(BASE_URL + path))
                     .header("Accept", "application/json")
                     .header("User-Agent", "Java-HttpClient")
-                    .header("Authorization", "Bearer " + Token)
+                    .header("Authorization", "Bearer " + token)
                     .GET()
                     .build();
 

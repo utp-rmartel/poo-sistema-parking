@@ -4,8 +4,10 @@
  */
 package BusinessLogic;
 
+import BusinessEntity.VehiculoBE;
 import DTOs.ApiResponseDTO;
 import DTOs.VehiculoSunarpDTO;
+import DataAccessObject.VehiculoDAO;
 import Services.ApiService;
 
 /**
@@ -15,17 +17,36 @@ import Services.ApiService;
 public class VehiculoBL {
 
     private ApiService apiServiceSunarp;
+    private VehiculoDAO vehiculoDAO;
 
     public VehiculoBL() {
-        this.apiServiceSunarp = new ApiService("http://localhost:8000");
+        this.apiServiceSunarp = new ApiService("http://localhost:8000","");
+        vehiculoDAO = new VehiculoDAO();
     }
 
-    public VehiculoSunarpDTO buscarVehiculoPorPlaca(String placa) {
+    public VehiculoSunarpDTO buscarVehiculoSunarp(String placa) {
 
         String path = "/consulta-vehiculo?placa=" + placa;
         ApiResponseDTO<VehiculoSunarpDTO> response = this.apiServiceSunarp.methodGET(path, VehiculoSunarpDTO.class);
         
         return response.getData();
+    }
+    
+    public VehiculoBE buscarVehiculoPorPlaca(String placa) {
+        return vehiculoDAO.ReadByPlaca(placa);
+    }
+    
+    public VehiculoBE buscarVehiculo(String placa) {
+        VehiculoBE vehiculoBD = buscarVehiculoPorPlaca(placa);
+
+        if (vehiculoBD != null) {
+            return vehiculoBD;
+        }
+
+        VehiculoSunarpDTO vehiculoSunarp = buscarVehiculoSunarp(placa);
+        
+
+        return vehiculoSunarp == null ? null : new VehiculoBE(placa, vehiculoSunarp.getMarca(), vehiculoSunarp.getModelo(), vehiculoSunarp.getColor(), null);
     }
 
 }
