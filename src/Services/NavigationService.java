@@ -25,7 +25,7 @@ public class NavigationService {
     }
     
     public void navigatePage(Component component, Optional<Integer> width, Optional<Integer> height) {
-        component.setSize(width.orElse(680), height.orElse(240));
+        component.setSize(width.orElse(800), height.orElse(800));
         component.setLocation(0, 0);
         pContent.removeAll();
         pContent.add(component, BorderLayout.CENTER);

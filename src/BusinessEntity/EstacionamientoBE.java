@@ -4,6 +4,7 @@
  */
 package BusinessEntity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,8 +19,8 @@ public class EstacionamientoBE extends AuditoriaAbs {
     private int idZonaParking;
     private UUID idTarifa;
     private int idEstado;
-    private Date fechaHoraEntrada;
-    private Date fechaHoraSalida;
+    private LocalDateTime fechaHoraEntrada;
+    private LocalDateTime fechaHoraSalida;
     private int cantidad;
 
     public EstacionamientoBE() {
@@ -61,19 +62,19 @@ public class EstacionamientoBE extends AuditoriaAbs {
         this.idTarifa = idTarifa;
     }
 
-    public Date getFechaHoraEntrada() {
+    public LocalDateTime getFechaHoraEntrada() {
         return fechaHoraEntrada;
     }
 
-    public void setFechaHoraEntrada(Date fechaHoraEntrada) {
+    public void setFechaHoraEntrada(LocalDateTime fechaHoraEntrada) {
         this.fechaHoraEntrada = fechaHoraEntrada;
     }
 
-    public Date getFechaHoraSalida() {
+    public LocalDateTime getFechaHoraSalida() {
         return fechaHoraSalida;
     }
 
-    public void setFechaHoraSalida(Date fechaHoraSalida) {
+    public void setFechaHoraSalida(LocalDateTime fechaHoraSalida) {
         this.fechaHoraSalida = fechaHoraSalida;
     }
 

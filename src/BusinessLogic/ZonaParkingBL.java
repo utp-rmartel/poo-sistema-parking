@@ -5,7 +5,6 @@
 package BusinessLogic;
 
 import BusinessEntity.ZonaParkingBE;
-import DataAccessObject.TarifaPrecioDAO;
 import DataAccessObject.ZonaParkingDAO;
 import java.util.List;
 
@@ -22,5 +21,9 @@ public class ZonaParkingBL {
     
     public List<ZonaParkingBE> GetAll() {
         return zonaParkingDAO.ReadAll();
+    }
+    
+    public List<ZonaParkingBE> obtenerTodoPorTipoVehiculo(int idTipoVehiculo) {
+        return zonaParkingDAO.ReadAllByTipoVehiculo(idTipoVehiculo);
     }
 }

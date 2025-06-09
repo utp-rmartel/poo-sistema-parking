@@ -4,26 +4,27 @@
  */
 package BusinessEntity;
 
+import java.util.UUID;
+
 
 /**
  *
  * @author Royss
  */
 public class TarifaBE extends AuditoriaAbs{
-   private int id;
+   private UUID id;
    private String nombre;
    private int idTipoVehiculo;
    private double precioBase;
-   private double precioAdicional;
 
     public TarifaBE() {
     }
    
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -42,16 +43,6 @@ public class TarifaBE extends AuditoriaAbs{
     public void setPrecioBase(double precioBase) {
         this.precioBase = precioBase;
     }
-
-    public double getPrecioAdicional() {
-        return precioAdicional;
-    }
-
-    public void setPrecioAdicional(double precioAdicional) {
-        this.precioAdicional = precioAdicional;
-    }
-
-    
 
     public int getIdTipoVehiculo() {
         return idTipoVehiculo;

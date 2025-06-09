@@ -89,6 +89,29 @@ public class ZonaParkingDAO extends ConexionMySQL implements IBaseDAO<ZonaParkin
         }
         return lst;
     }
+    
+    public List<ZonaParkingBE> ReadAllByTipoVehiculo(int idTipoVehiculo) {
+        List<ZonaParkingBE> lst = null; 
+        try{
+            String SQL = "SELECT * FROM ZonaParking WHERE activo = 1 and idTipoVehiculo=?";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setInt(1, idTipoVehiculo);
+            ResultSet res = pst.executeQuery(); 
+            lst = new ArrayList<>(); 
+            while(res.next()){
+                ZonaParkingBE item = new ZonaParkingBE();
+                item.setId(res.getInt("id"));
+                item.setNombre(res.getString("nombre"));
+                item.setIdEstado(res.getInt("idEstado"));
+                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));        
+                
+                lst.add(item);
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return lst;
+    }
 
     @Override
     public boolean Update(ZonaParkingBE input) {

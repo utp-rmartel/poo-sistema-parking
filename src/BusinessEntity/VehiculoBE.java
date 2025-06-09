@@ -31,6 +31,16 @@ public class VehiculoBE extends AuditoriaAbs {
         this.idCliente = idCliente;
     }
 
+    public int getIdTipoVehiculo() {
+        return idTipoVehiculo;
+    }
+
+    public void setIdTipoVehiculo(int idTipoVehiculo) {
+        this.idTipoVehiculo = idTipoVehiculo;
+    }
+    
+    
+
     public UUID getId() {
         return id;
     }

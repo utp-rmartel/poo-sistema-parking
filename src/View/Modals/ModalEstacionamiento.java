@@ -6,12 +6,17 @@ package View.Modals;
 
 import BusinessEntity.ClienteBE;
 import BusinessEntity.MaestroDetalleBE;
+import BusinessEntity.TarifaBE;
 import BusinessEntity.VehiculoBE;
+import BusinessEntity.ZonaParkingBE;
 import BusinessLogic.ClienteBL;
+import BusinessLogic.EstacionamientoBL;
 import BusinessLogic.MaestroDetalleBL;
-import BusinessLogic.TarifaPrecioBL;
+import BusinessLogic.TarifaBL;
 import BusinessLogic.VehiculoBL;
 import BusinessLogic.ZonaParkingBL;
+import DTOs.EstacionamientoCrearDTO;
+import Enums.TablasEnum;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,12 +29,23 @@ import javax.swing.JOptionPane;
 public class ModalEstacionamiento extends javax.swing.JDialog {
 
     private MaestroDetalleBL maestroDetalleBL;
-    private TarifaPrecioBL tarifaPrecioBL;
     private ZonaParkingBL zonaParkingBL;
     private ClienteBL clienteBL;
     private VehiculoBL vehiculoBL;
+    private TarifaBL tarifaBL;
+    private EstacionamientoBL estacionamientoBL;
 
     private List<MaestroDetalleBE> tipoDocumentos;
+    private List<MaestroDetalleBE> tipoVehiculos;
+    private List<ZonaParkingBE> zonasParking;
+    private List<TarifaBE> tarifas;
+
+    private TarifaBE tarifa;
+    private MaestroDetalleBE tipoVehiculo;
+    private MaestroDetalleBE tipoDocumento;
+    private ZonaParkingBE zonaParking;
+    private ClienteBE cliente;
+    private VehiculoBE vehiculo;
 
     public ModalEstacionamiento(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -39,12 +55,14 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
         habilitarComponentesVehiculo(false);
 
         maestroDetalleBL = new MaestroDetalleBL();
-        tarifaPrecioBL = new TarifaPrecioBL();
         zonaParkingBL = new ZonaParkingBL();
         clienteBL = new ClienteBL();
         vehiculoBL = new VehiculoBL();
+        tarifaBL = new TarifaBL();
+        estacionamientoBL = new EstacionamientoBL();
 
         cargarTipoDocumento();
+        cargarTipoVehiculo();
     }
 
     /**
@@ -107,6 +125,11 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
         txtNumeroDocumento.setName("txtUsuario"); // NOI18N
 
         cboTipoVehiculo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboTipoVehiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboTipoVehiculoActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Tipo Vehiculo");
 
@@ -152,6 +175,11 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
                 txtAdicionalActionPerformed(evt);
             }
         });
+        txtAdicional.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtAdicionalKeyTyped(evt);
+            }
+        });
 
         jLabel9.setText("Cantidad");
 
@@ -159,6 +187,11 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
         txtCantidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCantidadActionPerformed(evt);
+            }
+        });
+        txtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCantidadKeyTyped(evt);
             }
         });
 
@@ -191,9 +224,14 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
             }
         });
 
-        jLabel12.setText("Tarifa Precio");
+        jLabel12.setText("Tarifa");
 
         cboTarifa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboTarifa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboTarifaActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Marca");
 
@@ -208,6 +246,11 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
         txtColor.setName("txtUsuario"); // NOI18N
 
         cboZonaParking.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboZonaParking.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboZonaParkingActionPerformed(evt);
+            }
+        });
 
         jLabel15.setText("Zona Parking");
 
@@ -223,7 +266,7 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
                 .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(lblTitulo)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,47 +274,65 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
                                 .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnBuscarPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(cboTarifa, javax.swing.GroupLayout.Alignment.LEADING, 0, 127, Short.MAX_VALUE)
-                                .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cboTipoVehiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cboZonaParking, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel15)))
                             .addComponent(jLabel10)
-                            .addComponent(txtTotalEstimado, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(btnCancelar)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(6, 6, 6))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel7)
-                                        .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel8)
-                                        .addComponent(txtAdicional, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel9)
-                                        .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(txtTotalEstimado, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator2)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(cboTipoVehiculo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel13))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel14)
+                                            .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(txtPrecio)
+                                                .addComponent(cboTarifa, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING))
+                                            .addComponent(jLabel7))
+                                        .addGap(22, 22, 22)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cboZonaParking, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel15)
+                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                    .addComponent(btnCancelar)
+                                                    .addGap(18, 18, 18)
+                                                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel8)
+                                                        .addComponent(txtAdicional, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGap(18, 18, 18)
+                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel9)
+                                                        .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                .addGap(0, 14, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(txtCliente))
+                                .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel16)))
@@ -285,31 +346,15 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(txtNumeroDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(btnBuscarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(lblTitulo)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel13))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel14)
-                                    .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(btnBuscarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                         .addGap(25, 25, 25))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(25, 25, 25)
                 .addComponent(lblTitulo)
-                .addGap(19, 19, 19)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel11)
@@ -332,63 +377,65 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarPlaca))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cboTipoVehiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel15)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cboZonaParking, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cboTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtAdicional, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTotalEstimado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnCancelar)
-                            .addComponent(btnGuardar)))
+                        .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel13)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(28, 28, 28))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel14)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cboTipoVehiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboZonaParking, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAdicional, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTotalEstimado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnGuardar))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -399,18 +446,50 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+       this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
+
+        try {
+            cliente = new ClienteBE();
+            cliente.setDocumento(txtNumeroDocumento.getText());
+            cliente.setNombre(txtCliente.getText());
+            cliente.setApellidos(txtApellidos.getText());
+            cliente.setTipoDocumento(tipoDocumento.getId());
+
+            vehiculo = new VehiculoBE();
+            vehiculo.setPlaca(txtPlaca.getText());
+            vehiculo.setMarca(txtMarca.getText());
+            vehiculo.setModelo(txtModelo.getText());
+            vehiculo.setColor(txtColor.getText());
+            vehiculo.setIdTipoVehiculo(tipoVehiculo.getId());
+
+            EstacionamientoCrearDTO estacionamientoCrearDTO = new EstacionamientoCrearDTO(
+                    cliente,
+                    vehiculo,
+                    tarifa,
+                    zonaParking
+            );
+
+            boolean flag = estacionamientoBL.guardar(estacionamientoCrearDTO);
+            if (!flag) {
+                JOptionPane.showMessageDialog(null, "No se ha podido guardar el estacionamiento", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            JOptionPane.showMessageDialog(null, "Estacionamiento guardado", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error", "Mensaje", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
@@ -418,12 +497,8 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
     }//GEN-LAST:event_txtPrecioActionPerformed
 
     private void txtAdicionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAdicionalActionPerformed
-        // TODO add your handling code here:
+        calcularTotalEstimado();
     }//GEN-LAST:event_txtAdicionalActionPerformed
-
-    private void txtCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCantidadActionPerformed
 
     private void txtTotalEstimadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalEstimadoActionPerformed
         // TODO add your handling code here:
@@ -431,9 +506,11 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
 
-        limpiarComponentesCliente();
         String tipoDocumentoValor = (String) cboTipoDocumento.getSelectedItem();
         String documentoValor = txtNumeroDocumento.getText();
+
+        txtCliente.setText("");
+        txtApellidos.setText("");
 
         if (documentoValor.isBlank() || documentoValor.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Debe ingresar el numero Documento", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
@@ -444,7 +521,7 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
                 .findFirst();
 
         try {
-            ClienteBE cliente = this.clienteBL.buscarCliente(tipoDocumento.get().getId(), documentoValor);
+            cliente = this.clienteBL.buscarCliente(tipoDocumento.get().getId(), documentoValor);
             if (cliente == null) {
                 JOptionPane.showMessageDialog(null, "No se ha encontrado al cliente", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
                 habilitarComponentesClientesPorTipoDocumento(true);
@@ -464,8 +541,11 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     private void btnBuscarPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPlacaActionPerformed
-        limpiarComponentesVehiculo();
         String placaValor = txtPlaca.getText();
+
+        txtMarca.setText("");
+        txtModelo.setText("");
+        txtColor.setText("");
 
         if (placaValor.isBlank() || placaValor.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Debe ingresar la Placa", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
@@ -473,7 +553,7 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
         }
 
         try {
-            VehiculoBE vehiculo = this.vehiculoBL.buscarVehiculo(placaValor);
+            vehiculo = this.vehiculoBL.buscarVehiculo(placaValor);
             if (vehiculo == null) {
                 JOptionPane.showMessageDialog(null, "No se ha encontrado el vehiculo", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
                 habilitarComponentesClientesPorPlaca(true);
@@ -493,11 +573,13 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBuscarPlacaActionPerformed
 
     private void cboTipoDocumentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTipoDocumentoActionPerformed
-        String tipoDocumento = (String) cboTipoDocumento.getSelectedItem();
+        String tipoDocumentoValor = (String) cboTipoDocumento.getSelectedItem();
 
-        if (tipoDocumento == null) {
+        if (tipoDocumentoValor == null) {
             return;
         }
+
+        tipoDocumento = tipoDocumentos.stream().filter(tv -> tv.getValor().equals(tipoDocumentoValor)).findFirst().get();
 
         habilitarComponentesClientesPorTipoDocumento(false);
         habilitarComponentesVehiculo(false);
@@ -506,19 +588,91 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
         limpiarComponentesVehiculo();
     }//GEN-LAST:event_cboTipoDocumentoActionPerformed
 
-    private void limpiarComponentesCliente(){
+    private void cboTipoVehiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTipoVehiculoActionPerformed
+        String tipoVehiculoCValor = (String) cboTipoVehiculo.getSelectedItem();
+        Optional<MaestroDetalleBE> tipoVehiculoOpt = tipoVehiculos.stream().filter(tv -> tv.getValor().equals(tipoVehiculoCValor)).findFirst();
+
+        if (!tipoVehiculoOpt.isPresent()) {
+            return;
+        }
+
+        tipoVehiculo = tipoVehiculoOpt.get();
+        int idTipoVehiculo = tipoVehiculo.getId();
+
+        cargarZonaParking(idTipoVehiculo);
+        cargarTarifas(idTipoVehiculo);
+    }//GEN-LAST:event_cboTipoVehiculoActionPerformed
+
+    private void cboTarifaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTarifaActionPerformed
+        String tarifaValor = (String) cboTarifa.getSelectedItem();
+        Optional<TarifaBE> tarifaOp = tarifas.stream().filter(t -> t.getNombre().equals(tarifaValor)).findFirst();
+
+        if (!tarifaOp.isPresent()) {
+            return;
+        }
+
+        tarifa = tarifaOp.get();
+
+        if (tarifa != null) {
+            txtPrecio.setText(String.valueOf(tarifa.getPrecioBase()));
+        }
+    }//GEN-LAST:event_cboTarifaActionPerformed
+
+    private void txtCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadActionPerformed
+        calcularTotalEstimado();
+    }//GEN-LAST:event_txtCantidadActionPerformed
+
+    private void txtCantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyTyped
+        soloDigitos(evt);
+    }//GEN-LAST:event_txtCantidadKeyTyped
+
+    private void txtAdicionalKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAdicionalKeyTyped
+        soloDigitos(evt);
+    }//GEN-LAST:event_txtAdicionalKeyTyped
+
+    private void cboZonaParkingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboZonaParkingActionPerformed
+        String zonaParkingValor = (String) cboZonaParking.getSelectedItem();
+        Optional<ZonaParkingBE> zonaParkingOpt = zonasParking.stream().filter(tv -> tv.getNombre().equals(zonaParkingValor)).findFirst();
+
+        if (!zonaParkingOpt.isPresent()) {
+            return;
+        }
+
+        zonaParking = zonaParkingOpt.get();
+    }//GEN-LAST:event_cboZonaParkingActionPerformed
+
+    private void soloDigitos(java.awt.event.KeyEvent evt) {
+        char c = evt.getKeyChar();
+        if (!Character.isDigit(c)) {
+            evt.consume();
+        }
+    }
+
+    private void calcularTotalEstimado() {
+
+        if (tarifa == null) {
+            return;
+        }
+
+        int cantidad = txtCantidad.getText().length() > 0 ? Integer.parseInt(txtCantidad.getText()) : 0;
+        int adicional = txtAdicional.getText().length() > 0 ? Integer.parseInt(txtAdicional.getText()) : 0;
+        double totalEstimado = (tarifa.getPrecioBase() * cantidad) + adicional;
+        txtTotalEstimado.setText(String.valueOf(totalEstimado));
+    }
+
+    private void limpiarComponentesCliente() {
         txtCliente.setText("");
         txtApellidos.setText("");
         txtNumeroDocumento.setText("");
     }
-    
-    private void limpiarComponentesVehiculo(){
+
+    private void limpiarComponentesVehiculo() {
         txtMarca.setText("");
         txtModelo.setText("");
         txtColor.setText("");
         txtPlaca.setText("");
     }
-    
+
     private void habilitarComponentesClientesPorTipoDocumento(Boolean flag) {
         txtCliente.setEnabled(flag);
         txtApellidos.setEnabled(flag);
@@ -531,12 +685,44 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
     }
 
     private void cargarTipoDocumento() {
-        tipoDocumentos = this.maestroDetalleBL.GetAllMaestroDetalle(1);
+        tipoDocumentos = this.maestroDetalleBL.GetAllMaestroDetalle(TablasEnum.TIPO_DOCUMENTO.getValor());
 
         cboTipoDocumento.removeAll();
         cboTipoDocumento.removeAllItems();
         for (MaestroDetalleBE td : tipoDocumentos) {
             cboTipoDocumento.addItem(td.getValor());
+        }
+    }
+
+    private void cargarTipoVehiculo() {
+        tipoVehiculos = this.maestroDetalleBL.GetAllMaestroDetalle(TablasEnum.TIPO_VEHICULO.getValor());
+
+        cboTipoVehiculo.removeAll();
+        cboTipoVehiculo.removeAllItems();
+        for (MaestroDetalleBE td : tipoVehiculos) {
+            cboTipoVehiculo.addItem(td.getValor());
+        }
+    }
+
+    private void cargarZonaParking(int idTipoVehiculo) {
+        zonasParking = zonaParkingBL.obtenerTodoPorTipoVehiculo(idTipoVehiculo);
+
+        cboZonaParking.removeAll();
+        cboZonaParking.removeAllItems();
+        cboZonaParking.addItem("--Seleccione--");
+        for (ZonaParkingBE td : zonasParking) {
+            cboZonaParking.addItem(td.getNombre());
+        }
+    }
+
+    private void cargarTarifas(int idTipoVehiculo) {
+        tarifas = tarifaBL.obtenerTodoPorTipoVehiculo(idTipoVehiculo);
+
+        cboTarifa.removeAll();
+        cboTarifa.removeAllItems();
+        cboTarifa.addItem("--Seleccione--");
+        for (TarifaBE td : tarifas) {
+            cboTarifa.addItem(td.getNombre());
         }
     }
 

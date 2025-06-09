@@ -28,17 +28,15 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
                         + "id,"
                         + "nombre,"    
                         + "idTipoVehiculo,"
-                        + "precioBase,"
-                        + "precioAdicional"
+                        + "precioBase"
                     + ")"
                     + "VALUES"
-                    + "(?,?,?,?,?)";
+                    + "(?,?,?,?)";
             PreparedStatement pst= getConexion().prepareStatement(SQL);
-            pst.setInt(1, input.getId());
+            pst.setString(1, input.getId().toString());
             pst.setString(2, input.getNombre());
             pst.setInt(3, input.getIdTipoVehiculo());
             pst.setDouble(4, input.getPrecioBase());
-            pst.setDouble(5, input.getPrecioAdicional());
             
             result = pst.execute();            
         }catch(Exception e){
@@ -57,11 +55,10 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
             ResultSet res = pst.executeQuery(); 
             
             while(res.next()){
-                item.setId(Integer.parseInt(id));
+                item.setId(UUID.fromString(res.getString("id")));
                 item.setNombre(res.getString("nombre"));
                 item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));  
                 item.setPrecioBase(res.getDouble("precioBase"));
-                item.setPrecioAdicional(res.getDouble("precioAdicional"));
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -79,11 +76,33 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
             lst = new ArrayList<>(); 
             while(res.next()){
                 TarifaBE item = new TarifaBE();
-                item.setId(res.getInt("id"));
+                item.setId(UUID.fromString(res.getString("id")));
                 item.setNombre(res.getString("nombre"));
                 item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));  
                 item.setPrecioBase(res.getDouble("precioBase"));
-                item.setPrecioAdicional(res.getDouble("precioAdicional")); 
+                
+                lst.add(item);
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return lst;
+    }
+    
+    public List<TarifaBE> ReadAllByTipoVehiculo(int idTipoVehiculo) {
+        List<TarifaBE> lst = null; 
+        try{
+            String SQL = "SELECT * FROM Tarifa WHERE activo = 1 and idTipoVehiculo=?";
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+            pst.setInt(1, idTipoVehiculo);
+            ResultSet res = pst.executeQuery(); 
+            lst = new ArrayList<>(); 
+            while(res.next()){
+                TarifaBE item = new TarifaBE();
+                item.setId(UUID.fromString(res.getString("id")));
+                item.setNombre(res.getString("nombre"));
+                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));  
+                item.setPrecioBase(res.getDouble("precioBase"));
                 
                 lst.add(item);
             }
@@ -101,8 +120,7 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
                     + "SET "
                         + "nombre=?,"    
                         + "idTipoVehiculo=?,"
-                        + "precioBase=?,"
-                        + "precioAdicional=?"
+                        + "precioBase=?"
                     + "WHERE "
                         + "id=?";
             
@@ -111,8 +129,7 @@ public class TarifaDAO extends ConexionMySQL implements IBaseDAO<TarifaBE>{
             pst.setString(1, input.getNombre());
             pst.setInt(2, input.getIdTipoVehiculo());
             pst.setDouble(3, input.getPrecioBase());
-            pst.setDouble(4, input.getPrecioAdicional());
-            pst.setInt(5, input.getId());
+            pst.setString(4, input.getId().toString());
    
             result = pst.execute();
         }catch(Exception e){

@@ -22,13 +22,13 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
         boolean result=false;
         
         try{
-            String SQL = "INSERT cliente"
+            String SQL = "INSERT Cliente"
                     + "("
                         + "id,"
                         + "nombre,"
                         + "apellidos,"
                         + "documento,"
-                        + "tipoDocumento,"
+                        + "idTipoDocumento,"
                         + "telefono,"
                         + "email"
                     + ")"
@@ -54,7 +54,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
     public ClienteBE Read(String id) {
         ClienteBE item =null;
         try{
-            String SQL ="SELECT * FROM cliente WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM Cliente WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
@@ -65,7 +65,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
                 item.setNombre(res.getString("nombre"));
                 item.setApellidos(res.getString("apellidos"));
                 item.setDocumento(res.getString("documento"));
-                item.setTipoDocumento(res.getInt("tipoDocumento"));
+                item.setTipoDocumento(res.getInt("idTipoDocumento"));
                 item.setTelefono(res.getString("telefono"));
                 item.setEmail(res.getString("email"));             
             }
@@ -90,7 +90,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
                 item.setNombre(res.getString("nombre"));
                 item.setApellidos(res.getString("apellidos"));
                 item.setDocumento(res.getString("documento"));
-                item.setTipoDocumento(res.getInt("tipoDocumento"));
+                item.setTipoDocumento(res.getInt("idTipoDocumento"));
                 item.setTelefono(res.getString("telefono"));
                 item.setEmail(res.getString("email"));             
             }
@@ -105,7 +105,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
     public List<ClienteBE> ReadAll() {
         List<ClienteBE> lst = null; 
         try{
-            String SQL = "SELECT * FROM cliente WHERE activo = 1";
+            String SQL = "SELECT * FROM Cliente WHERE activo = 1";
             Statement stm = getConexion().createStatement();
             ResultSet res = stm.executeQuery(SQL);
             lst = new ArrayList<>(); 
@@ -115,7 +115,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
                 item.setNombre(res.getString("nombre"));
                 item.setApellidos(res.getString("apellidos"));
                 item.setDocumento(res.getString("documento"));
-                item.setTipoDocumento(res.getInt("tipoDocumento"));
+                item.setTipoDocumento(res.getInt("idTipoDocumento"));
                 item.setTelefono(res.getString("telefono"));
                 item.setEmail(res.getString("email")); 
                 
@@ -131,12 +131,8 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
     public boolean Update(ClienteBE input) {
         boolean result = false;
         try{
-            String SQL="UPDATE cliente "
+            String SQL="UPDATE Cliente "
                     + "SET "
-                        + "nombre=?,"
-                        + "apellidos=?,"
-                        + "documento=?,"
-                        + "tipoDocumento=?,"
                         + "telefono=?,"
                         + "email=?"
                     + "WHERE "
@@ -163,7 +159,7 @@ public class ClienteDAO extends ConexionMySQL implements IBaseDAO<ClienteBE>{
     public boolean Delete(String id) {
         boolean result = false;
         try {
-            String SQL="UPDATE cliente "
+            String SQL="UPDATE Cliente "
                     + "SET "
                         + "activo=0"
                     + "WHERE "

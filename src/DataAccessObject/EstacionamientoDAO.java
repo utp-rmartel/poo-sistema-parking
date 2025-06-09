@@ -11,6 +11,7 @@ import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -43,7 +44,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
             pst.setString(2, input.getIdVehiculo().toString());
             pst.setInt(3, input.getIdZonaParking());
             pst.setString(4, input.getIdTarifa().toString());
-            pst.setDate(5, (Date) input.getFechaHoraEntrada());
+            pst.setTimestamp(5, Timestamp.valueOf(input.getFechaHoraEntrada()));
             pst.setInt(6, input.getIdEstado());
             pst.setInt(7, input.getCantidad());
             
@@ -68,8 +69,8 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
                 item.setIdVehiculo(UUID.fromString(res.getString("idVehiculo")));
                 item.setIdZonaParking(res.getInt("idZonaParking"));
                 item.setIdTarifa(UUID.fromString(res.getString("idTarifa")));
-                item.setFechaHoraEntrada(res.getDate("fechaHoraEntrada"));
-                item.setFechaHoraSalida(res.getDate("fechaHoraSalida"));
+                item.setFechaHoraEntrada(res.getTimestamp("fechaHoraEntrada").toLocalDateTime());
+                item.setFechaHoraSalida(res.getTimestamp("fechaHoraSalida").toLocalDateTime());
                 item.setIdEstado(res.getInt("idEstado"));   
                 item.setCantidad(res.getInt("cantidad"));   
             }
@@ -83,7 +84,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
     public List<EstacionamientoBE> ReadAll() {
         List<EstacionamientoBE> lst = null; 
         try{
-            String SQL = "SELECT * FROM estacionamiento WHERE activo = 1";
+            String SQL = "SELECT * FROM Estacionamiento WHERE activo = 1";
             Statement stm = getConexion().createStatement();
             ResultSet res = stm.executeQuery(SQL);
             lst = new ArrayList<>(); 
@@ -93,8 +94,8 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
                 item.setIdVehiculo(UUID.fromString(res.getString("idVehiculo")));
                 item.setIdZonaParking(res.getInt("idZonaParking"));
                 item.setIdTarifa(UUID.fromString(res.getString("idTarifa")));
-                item.setFechaHoraEntrada(res.getDate("fechaHoraEntrada"));
-                item.setFechaHoraSalida(res.getDate("fechaHoraSalida"));
+                item.setFechaHoraEntrada(res.getTimestamp("fechaHoraEntrada").toLocalDateTime());
+                item.setFechaHoraSalida(res.getTimestamp("fechaHoraSalida").toLocalDateTime());
                 item.setIdEstado(res.getInt("idEstado"));   
                 item.setCantidad(res.getInt("cantidad"));
                 
@@ -126,7 +127,7 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
             pst.setString(1, input.getIdVehiculo().toString());
             pst.setInt(2, input.getIdZonaParking());
             pst.setString(3, input.getIdTarifa().toString());
-            pst.setDate(4, (Date) input.getFechaHoraEntrada());
+            pst.setTimestamp(4, Timestamp.valueOf(input.getFechaHoraEntrada()));
             pst.setInt(5, input.getIdEstado());
             pst.setInt(6, input.getCantidad());
             pst.setString(7, input.getId().toString());

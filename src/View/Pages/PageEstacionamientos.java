@@ -4,13 +4,19 @@
  */
 package View.Pages;
 
+import BusinessEntity.EstacionamientoBE;
+import BusinessLogic.EstacionamientoBL;
 import View.Modals.ModalClientes;
 import View.Forms.FormMenu;
 import View.Modals.ModalEstacionamiento;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Panel;
+import java.util.List;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -18,9 +24,13 @@ import javax.swing.JPanel;
  */
 public class PageEstacionamientos extends java.awt.Panel {
 
+    private EstacionamientoBL estacionamientoBL;
+    
     public PageEstacionamientos() {
         initComponents();
+        estacionamientoBL = new EstacionamientoBL();
         
+        cargarEstacionamientos();
     }  
 
     /**
@@ -33,9 +43,9 @@ public class PageEstacionamientos extends java.awt.Panel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblClientes = new javax.swing.JTable();
         btnNuevo = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblEstacionamiento = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -44,25 +54,22 @@ public class PageEstacionamientos extends java.awt.Panel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Listado de Estacionamientos");
 
-        tblClientes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(tblClientes);
-
         btnNuevo.setText("Nuevo");
         btnNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoActionPerformed(evt);
             }
         });
+
+        tblEstacionamiento.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(tblEstacionamiento);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -73,8 +80,8 @@ public class PageEstacionamientos extends java.awt.Panel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnNuevo)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 613, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -84,8 +91,8 @@ public class PageEstacionamientos extends java.awt.Panel {
                 .addGap(18, 18, 18)
                 .addComponent(btnNuevo)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -98,12 +105,38 @@ public class PageEstacionamientos extends java.awt.Panel {
         mEstacionamiento.setVisible(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
+    private void cargarEstacionamientos() {
+        List<EstacionamientoBE> estacionamientos = estacionamientoBL.obtenerTodo();
+            
+        DefaultTableModel modelo = (DefaultTableModel) tblEstacionamiento.getModel();
+        modelo.setRowCount(0);
+        tblEstacionamiento.setRowHeight(40); // Set row height
+        tblEstacionamiento.setPreferredScrollableViewportSize(new Dimension(500, 150));
+        
+        modelo.setColumnIdentifiers(new Object[] { "ID", "Nombre", "Edad" });
+        modelo.addRow(new Object[] { 1, "Ana", 25 });
+        modelo.addRow(new Object[] { 2, "Luis", 30 });
+        modelo.addRow(new Object[] { 3, "Carla", 28 });
+        modelo.addRow(new Object[] { 4, "Ana", 25 });
+        modelo.addRow(new Object[] { 5, "Luis", 30 });
+        modelo.addRow(new Object[] { 6, "Carla", 28 });
+        modelo.addRow(new Object[] { 7, "Ana", 25 });
+        modelo.addRow(new Object[] { 8, "Luis", 30 });
+        modelo.addRow(new Object[] { 9, "Carla", 28 });
+        modelo.addRow(new Object[] { 10, "Ana", 25 });
+        modelo.addRow(new Object[] { 12, "Luis", 30 });
+        modelo.addRow(new Object[] { 13, "Carla", 28 });
+        modelo.addRow(new Object[] { 14, "Ana", 25 });
+        modelo.addRow(new Object[] { 15, "Luis", 30 });
+        modelo.addRow(new Object[] { 16, "Carla", 28 });
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNuevo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblClientes;
+    private javax.swing.JTable tblEstacionamiento;
     // End of variables declaration//GEN-END:variables
 }

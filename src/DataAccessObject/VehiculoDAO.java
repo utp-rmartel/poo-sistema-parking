@@ -24,7 +24,7 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
         boolean result=false;
         
         try{
-            String SQL = "INSERT vehiculo"
+            String SQL = "INSERT Vehiculo"
                     + "("
                         + "id,"
                         + "placa,"
