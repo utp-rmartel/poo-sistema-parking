@@ -48,5 +48,9 @@ public class VehiculoBL {
 
         return vehiculoSunarp == null ? null : new VehiculoBE(placa, vehiculoSunarp.getMarca(), vehiculoSunarp.getModelo(), vehiculoSunarp.getColor(), null);
     }
+    
+    public VehiculoBE obtenerPorId(String id) {
+        return vehiculoDAO.Read(id);
+    }
 
 }

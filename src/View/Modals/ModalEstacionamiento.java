@@ -476,7 +476,8 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
                     cliente,
                     vehiculo,
                     tarifa,
-                    zonaParking
+                    zonaParking,
+                    Integer.parseInt(txtCantidad.getText())
             );
 
             boolean flag = estacionamientoBL.guardar(estacionamientoCrearDTO);
@@ -685,7 +686,7 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
     }
 
     private void cargarTipoDocumento() {
-        tipoDocumentos = this.maestroDetalleBL.GetAllMaestroDetalle(TablasEnum.TIPO_DOCUMENTO.getValor());
+        tipoDocumentos = this.maestroDetalleBL.obtenerTodoPorMaestro(TablasEnum.TIPO_DOCUMENTO.getValor());
 
         cboTipoDocumento.removeAll();
         cboTipoDocumento.removeAllItems();
@@ -695,7 +696,7 @@ public class ModalEstacionamiento extends javax.swing.JDialog {
     }
 
     private void cargarTipoVehiculo() {
-        tipoVehiculos = this.maestroDetalleBL.GetAllMaestroDetalle(TablasEnum.TIPO_VEHICULO.getValor());
+        tipoVehiculos = this.maestroDetalleBL.obtenerTodoPorMaestro(TablasEnum.TIPO_VEHICULO.getValor());
 
         cboTipoVehiculo.removeAll();
         cboTipoVehiculo.removeAllItems();

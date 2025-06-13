@@ -50,5 +50,9 @@ public class ClienteBL {
 
         return clienteSunat == null ? null : new ClienteBE(clienteSunat.getNombres(), clienteSunat.getApellidoPaterno() + " " + clienteSunat.getApellidoMaterno(), documento);
     }
+    
+    public ClienteBE obtenerPorId(String id) {
+        return clienteDAO.Read(id);
+    }
 
 }

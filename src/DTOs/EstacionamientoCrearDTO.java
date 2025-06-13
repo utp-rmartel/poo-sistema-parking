@@ -21,11 +21,12 @@ public class EstacionamientoCrearDTO {
     private ZonaParkingBE zonaParking;
     private int cantidad;
 
-    public EstacionamientoCrearDTO(ClienteBE cliente, VehiculoBE vehiculo, TarifaBE tarifa, ZonaParkingBE zonaParking) {
+    public EstacionamientoCrearDTO(ClienteBE cliente, VehiculoBE vehiculo, TarifaBE tarifa, ZonaParkingBE zonaParking, int cantidad) {
         this.cliente = cliente;
         this.vehiculo = vehiculo;
         this.tarifa = tarifa;
         this.zonaParking = zonaParking;
+        this.cantidad = cantidad;
     }
 
     public int getCantidad() {

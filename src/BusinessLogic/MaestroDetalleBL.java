@@ -19,7 +19,11 @@ public class MaestroDetalleBL {
         this.maestroDetalleDao = new MaestroDetalleDAO();
     }
     
-    public List<MaestroDetalleBE> GetAllMaestroDetalle(int idMaestro) {
+    public List<MaestroDetalleBE> obtenerTodoPorMaestro(int idMaestro) {
         return maestroDetalleDao.ReadAllByMaestro(idMaestro);
+    }
+    
+    public MaestroDetalleBE obtenerPorId(int id) {
+        return maestroDetalleDao.Read(String.valueOf(id));
     }
 }

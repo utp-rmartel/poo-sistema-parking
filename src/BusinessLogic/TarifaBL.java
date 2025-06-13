@@ -20,11 +20,15 @@ public class TarifaBL {
         this.tarifaDAO = new TarifaDAO();
     }
     
-    public List<TarifaBE> GetAll() {
+    public List<TarifaBE> obtenerTodo() {
         return tarifaDAO.ReadAll();
     }
     
     public List<TarifaBE> obtenerTodoPorTipoVehiculo(int idTipoVehiculo) {
         return tarifaDAO.ReadAllByTipoVehiculo(idTipoVehiculo);
+    }
+    
+    public TarifaBE obtenerPorId(String id) {
+        return tarifaDAO.Read(id);
     }
 }

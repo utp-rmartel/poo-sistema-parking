@@ -26,4 +26,8 @@ public class ZonaParkingBL {
     public List<ZonaParkingBE> obtenerTodoPorTipoVehiculo(int idTipoVehiculo) {
         return zonaParkingDAO.ReadAllByTipoVehiculo(idTipoVehiculo);
     }
+    
+    public ZonaParkingBE obtenerPorId(int id) {
+        return zonaParkingDAO.Read(String.valueOf(id));
+    }
 }

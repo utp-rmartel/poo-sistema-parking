@@ -69,8 +69,8 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
                 item.setIdVehiculo(UUID.fromString(res.getString("idVehiculo")));
                 item.setIdZonaParking(res.getInt("idZonaParking"));
                 item.setIdTarifa(UUID.fromString(res.getString("idTarifa")));
-                item.setFechaHoraEntrada(res.getTimestamp("fechaHoraEntrada").toLocalDateTime());
-                item.setFechaHoraSalida(res.getTimestamp("fechaHoraSalida").toLocalDateTime());
+                item.setFechaHoraEntrada(res.getTimestamp("fechaHoraEntrada") != null ? res.getTimestamp("fechaHoraEntrada").toLocalDateTime() : null);
+                item.setFechaHoraSalida(res.getTimestamp("fechaHoraSalida") != null ? res.getTimestamp("fechaHoraSalida").toLocalDateTime() : null);
                 item.setIdEstado(res.getInt("idEstado"));   
                 item.setCantidad(res.getInt("cantidad"));   
             }
@@ -94,8 +94,8 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
                 item.setIdVehiculo(UUID.fromString(res.getString("idVehiculo")));
                 item.setIdZonaParking(res.getInt("idZonaParking"));
                 item.setIdTarifa(UUID.fromString(res.getString("idTarifa")));
-                item.setFechaHoraEntrada(res.getTimestamp("fechaHoraEntrada").toLocalDateTime());
-                item.setFechaHoraSalida(res.getTimestamp("fechaHoraSalida").toLocalDateTime());
+               item.setFechaHoraEntrada(res.getTimestamp("fechaHoraEntrada") != null ? res.getTimestamp("fechaHoraEntrada").toLocalDateTime() : null);
+                item.setFechaHoraSalida(res.getTimestamp("fechaHoraSalida") != null ? res.getTimestamp("fechaHoraSalida").toLocalDateTime() : null);
                 item.setIdEstado(res.getInt("idEstado"));   
                 item.setCantidad(res.getInt("cantidad"));
                 
