@@ -31,10 +31,11 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
                         + "marca,"
                         + "modelo,"
                         + "color,"
+                        + "idTipoVehiculo,"
                         + "idCliente"
                     + ")"
                     + "VALUES"
-                    + "(?,?,?,?,?,?)";
+                    + "(?,?,?,?,?,?,?)";
             
             PreparedStatement pst= getConexion().prepareStatement(SQL);
             pst.setString(1, input.getId().toString());
@@ -42,7 +43,8 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
             pst.setString(3, input.getMarca());
             pst.setString(4, input.getModelo());
             pst.setString(5, input.getColor());
-            pst.setString(6, input.getIdCliente().toString());
+            pst.setInt(6, input.getIdTipoVehiculo());
+            pst.setString(7, input.getIdCliente().toString());
             
             result = pst.execute();            
         }catch(Exception e){
@@ -67,6 +69,7 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
                 item.setMarca(res.getString("marca"));
                 item.setModelo(res.getString("modelo"));
                 item.setColor(res.getString("color"));
+                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));
                 item.setIdCliente(UUID.fromString(res.getString("idCliente")));             
             }
         }catch(Exception e){
@@ -90,6 +93,7 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
                 item.setMarca(res.getString("marca"));
                 item.setModelo(res.getString("modelo"));
                 item.setColor(res.getString("color"));
+                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));
                 item.setIdCliente(UUID.fromString(res.getString("idCliente")));             
             }
         }catch(Exception e){
@@ -113,6 +117,7 @@ public class VehiculoDAO extends ConexionMySQL implements IBaseDAO<VehiculoBE>{
                 item.setMarca(res.getString("marca"));
                 item.setModelo(res.getString("modelo"));
                 item.setColor(res.getString("color"));
+                item.setIdTipoVehiculo(res.getInt("idTipoVehiculo"));
                 item.setIdCliente(UUID.fromString(res.getString("idCliente")));
                 
                 lst.add(item);

@@ -5,21 +5,27 @@
 package View.Pages;
 
 import BusinessEntity.ClienteBE;
+import BusinessEntity.ComprobanteBE;
 import BusinessEntity.EstacionamientoBE;
 import BusinessEntity.MaestroDetalleBE;
 import BusinessEntity.TarifaBE;
 import BusinessEntity.VehiculoBE;
 import BusinessEntity.ZonaParkingBE;
 import BusinessLogic.ClienteBL;
+import BusinessLogic.ComprobanteBL;
 import BusinessLogic.EstacionamientoBL;
 import BusinessLogic.MaestroDetalleBL;
 import BusinessLogic.TarifaBL;
 import BusinessLogic.VehiculoBL;
 import BusinessLogic.ZonaParkingBL;
+import DTOs.EstacionamientoDTO;
+import Enums.EstadoComprobanteEnum;
+import Enums.EstadoEstacionamientoEnum;
 import View.Forms.FormMenu;
 import View.Modals.ModalEstacionamiento;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -37,11 +43,13 @@ import javax.swing.table.TableColumnModel;
 public class PageEstacionamientos extends java.awt.Panel {
 
     private EstacionamientoBL estacionamientoBL;
+    private ComprobanteBL comprobanteBL;
     private VehiculoBL vehiculoBL;
     private ClienteBL clienteBL;
     private MaestroDetalleBL maestroDetalleBL;
     private ZonaParkingBL zonaBL;
     private TarifaBL tarifaBL;
+    private List<EstacionamientoDTO> estacionamientosDto;
 
     public PageEstacionamientos() {
         initComponents();
@@ -51,10 +59,10 @@ public class PageEstacionamientos extends java.awt.Panel {
         maestroDetalleBL = new MaestroDetalleBL();
         zonaBL = new ZonaParkingBL();
         tarifaBL = new TarifaBL();
+        comprobanteBL = new ComprobanteBL();
         jScrollPane2.setPreferredSize(new Dimension(1000, 400));
-        //tblEstacionamiento.setPreferredSize(new Dimension(1000, tblEstacionamiento.getPreferredSize().height));
-        cargarEstacionamientos();  
-        anchoColumnas();
+        cargarEstacionamientos();
+
     }
 
     /**
@@ -70,6 +78,7 @@ public class PageEstacionamientos extends java.awt.Panel {
         btnNuevo = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblEstacionamiento = new javax.swing.JTable();
+        btnRecargar = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -103,6 +112,13 @@ public class PageEstacionamientos extends java.awt.Panel {
         });
         jScrollPane2.setViewportView(tblEstacionamiento);
 
+        btnRecargar.setLabel("Recargar");
+        btnRecargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRecargarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -110,10 +126,13 @@ public class PageEstacionamientos extends java.awt.Panel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnNuevo)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnNuevo)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnRecargar))
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(462, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 639, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,7 +140,9 @@ public class PageEstacionamientos extends java.awt.Panel {
                 .addGap(23, 23, 23)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(btnNuevo)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNuevo)
+                    .addComponent(btnRecargar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(33, Short.MAX_VALUE))
@@ -135,15 +156,33 @@ public class PageEstacionamientos extends java.awt.Panel {
         int columna = tblEstacionamiento.columnAtPoint(evt.getPoint());
 
         if (fila >= 0) {
-            if (columna == 9) {
-                String placa = (String) tblEstacionamiento.getValueAt(fila, 2); // Ejemplo: obtener placa
-                JOptionPane.showMessageDialog(null, "Editar: " + placa);
+            if (columna == 10) {
+                String id = (String) tblEstacionamiento.getValueAt(fila, 0);
 
-            } else if (columna == 10) {
+                EstacionamientoDTO estacionamiento = estacionamientosDto.stream().filter(e -> e.getId().toString().equals(id)).findFirst().get();
+
+                ModalEstacionamiento mEstacionamiento = new ModalEstacionamiento(new FormMenu(), true);
+                mEstacionamiento.setEstacionamientoCrearDTO(estacionamiento);
+                mEstacionamiento.pack();
+                mEstacionamiento.setLocationRelativeTo(null);
+                mEstacionamiento.setVisible(true);
+
+            } else if (columna == 11) {
                 int confirmacion = JOptionPane.showConfirmDialog(null, "¿Deseas eliminar este registro?", "Confirmar", JOptionPane.YES_NO_OPTION);
                 if (confirmacion == JOptionPane.YES_OPTION) {
-                    String placa = (String) tblEstacionamiento.getValueAt(fila, 2);
-                    JOptionPane.showMessageDialog(null, "Eliminado: " + placa);
+                    String id = (String) tblEstacionamiento.getValueAt(fila, 0);
+                    estacionamientoBL.eliminar(id);
+                    JOptionPane.showMessageDialog(null, "Estacionamiento eliminado", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+                    cargarEstacionamientos();
+                }
+            } else if (columna == 12) {
+                int confirmacion = JOptionPane.showConfirmDialog(null, "¿Deseas generar el comprobante?", "Confirmar", JOptionPane.YES_NO_OPTION);
+                if (confirmacion == JOptionPane.YES_OPTION) {
+                    String id = (String) tblEstacionamiento.getValueAt(fila, 0);
+                    EstacionamientoDTO estacionamiento = estacionamientosDto.stream().filter(e -> e.getId().toString().equals(id)).findFirst().get();
+                    comprobanteBL.guardar(estacionamiento);
+                    estacionamientoBL.actualizarEstado(id, EstadoEstacionamientoEnum.FINALIZADO.getValor());
+                    JOptionPane.showMessageDialog(null, "Comprobante generado", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         }
@@ -155,29 +194,35 @@ public class PageEstacionamientos extends java.awt.Panel {
         mEstacionamiento.setLocationRelativeTo(null);
         mEstacionamiento.setVisible(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
-   
+
+    private void btnRecargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarActionPerformed
+        cargarEstacionamientos();
+    }//GEN-LAST:event_btnRecargarActionPerformed
+
     private void cargarEstacionamientos() {
         List<EstacionamientoBE> estacionamientos = estacionamientoBL.obtenerTodo();
-
+        estacionamientosDto = new ArrayList<EstacionamientoDTO>();
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; 
+                return false;
             }
         };
 
         modelo.setColumnIdentifiers(new Object[]{
-            "Cliente", 
-            "Nro Documento", 
-            "Vehículo", 
-            "Tipo", 
-            "Zona", 
-            "Tarifa", 
-            "Cantidad", 
-            "Total", 
-            "Estado", 
-            "", 
-            "" 
+            "",
+            "Cliente",
+            "Nro Documento",
+            "Vehículo",
+            "Tipo",
+            "Zona",
+            "Tarifa",
+            "Cantidad",
+            "Total",
+            "Estado",
+            "",
+            "",
+            ""
         });
 
         for (EstacionamientoBE estacionamiento : estacionamientos) {
@@ -189,6 +234,7 @@ public class PageEstacionamientos extends java.awt.Panel {
             MaestroDetalleBE estado = maestroDetalleBL.obtenerPorId(estacionamiento.getIdEstado());
 
             modelo.addRow(new Object[]{
+                estacionamiento.getId().toString(),
                 cliente.getNombre() + " " + cliente.getApellidos(),
                 cliente.getDocumento(),
                 vehiculo.getPlaca(),
@@ -199,8 +245,18 @@ public class PageEstacionamientos extends java.awt.Panel {
                 tarifa.getPrecioBase() * estacionamiento.getCantidad(),
                 estado.getValor(),
                 new ImageIcon(getClass().getResource("/Recursos/editar.png")),
-                new ImageIcon(getClass().getResource("/Recursos/eliminar.png"))
-            });
+                new ImageIcon(getClass().getResource("/Recursos/eliminar.png")),
+                new ImageIcon(getClass().getResource("/Recursos/comprobante.png")),});
+
+            EstacionamientoDTO estacionamientoDto = new EstacionamientoDTO();
+            estacionamientoDto.setId(estacionamiento.getId().toString());
+            estacionamientoDto.setCantidad(estacionamiento.getCantidad());
+            estacionamientoDto.setCliente(cliente);
+            estacionamientoDto.setTarifa(tarifa);
+            estacionamientoDto.setVehiculo(vehiculo);
+            estacionamientoDto.setZonaParking(zonaParking);
+            estacionamientoDto.setTipoVehiculo(tipoVehiculo);
+            estacionamientosDto.add(estacionamientoDto);
         }
 
         tblEstacionamiento.setModel(modelo);
@@ -218,31 +274,39 @@ public class PageEstacionamientos extends java.awt.Panel {
             }
         };
 
-        tblEstacionamiento.getColumnModel().getColumn(9).setCellRenderer(iconRenderer);  
+        tblEstacionamiento.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblEstacionamiento.getColumnModel().getColumn(0).setMinWidth(0);
+        tblEstacionamiento.getColumnModel().getColumn(0).setWidth(0);
         tblEstacionamiento.getColumnModel().getColumn(10).setCellRenderer(iconRenderer);
+        tblEstacionamiento.getColumnModel().getColumn(11).setCellRenderer(iconRenderer);
+        tblEstacionamiento.getColumnModel().getColumn(12).setCellRenderer(iconRenderer);
         tblEstacionamiento.setRowHeight(25);
         tblEstacionamiento.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tblEstacionamiento.setPreferredScrollableViewportSize(tblEstacionamiento.getPreferredSize());
 
+        anchoColumnas();
     }
-    
+
     private void anchoColumnas() {
         TableColumnModel columnModel = tblEstacionamiento.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(250); // Cliente
-        columnModel.getColumn(1).setPreferredWidth(100); // Documento
-        columnModel.getColumn(2).setPreferredWidth(100); // Placa
-        columnModel.getColumn(3).setPreferredWidth(80);  // Tipo
-        columnModel.getColumn(4).setPreferredWidth(120); // Zona
-        columnModel.getColumn(5).setPreferredWidth(100); // Tarifa
-        columnModel.getColumn(6).setPreferredWidth(80);  // Cantidad
-        columnModel.getColumn(7).setPreferredWidth(100); // Total
-        columnModel.getColumn(8).setPreferredWidth(100); // Estado
-        columnModel.getColumn(9).setPreferredWidth(50);  // Editar
-        columnModel.getColumn(10).setPreferredWidth(50); // Eliminar
+        columnModel.getColumn(0).setPreferredWidth(0); // Cliente
+        columnModel.getColumn(1).setPreferredWidth(250); // Cliente
+        columnModel.getColumn(2).setPreferredWidth(100); // Documento
+        columnModel.getColumn(3).setPreferredWidth(100); // Placa
+        columnModel.getColumn(4).setPreferredWidth(80);  // Tipo
+        columnModel.getColumn(5).setPreferredWidth(120); // Zona
+        columnModel.getColumn(6).setPreferredWidth(100); // Tarifa
+        columnModel.getColumn(7).setPreferredWidth(80);  // Cantidad
+        columnModel.getColumn(8).setPreferredWidth(100); // Total
+        columnModel.getColumn(9).setPreferredWidth(100); // Estado
+        columnModel.getColumn(10).setPreferredWidth(50);  // Editar
+        columnModel.getColumn(11).setPreferredWidth(50); // Eliminar
+        columnModel.getColumn(12).setPreferredWidth(50); // Comprobante
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnRecargar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;

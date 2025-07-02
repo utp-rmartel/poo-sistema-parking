@@ -4,12 +4,25 @@
  */
 package View.Pages;
 
+import BusinessEntity.ComprobanteBE;
+import BusinessEntity.MaestroDetalleBE;
+import BusinessLogic.ComprobanteBL;
+import BusinessLogic.MaestroDetalleBL;
 import View.Modals.ModalClientes;
 import View.Forms.FormMenu;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Panel;
+import java.util.List;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -17,9 +30,17 @@ import javax.swing.JPanel;
  */
 public class PageComprobantes extends java.awt.Panel {
 
+    private ComprobanteBL  comprobanteBL;
+    private MaestroDetalleBL maestroDetalleBL;
+    
+    private List<ComprobanteBE> comprobantes;
+    
     public PageComprobantes() {
-        initComponents();
+        initComponents();      
+        comprobanteBL = new ComprobanteBL();
+        maestroDetalleBL = new MaestroDetalleBL();
         
+        cargarComprobantes();
     }  
 
     /**
@@ -33,7 +54,8 @@ public class PageComprobantes extends java.awt.Panel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblClientes = new javax.swing.JTable();
+        tblComprobantes = new javax.swing.JTable();
+        btnRecargar = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -42,18 +64,22 @@ public class PageComprobantes extends java.awt.Panel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Listado de Comprobantes");
 
-        tblClientes.setModel(new javax.swing.table.DefaultTableModel(
+        tblComprobantes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
-        jScrollPane1.setViewportView(tblClientes);
+        jScrollPane1.setViewportView(tblComprobantes);
+
+        btnRecargar.setText("Recargar");
+        btnRecargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRecargarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -63,27 +89,122 @@ public class PageComprobantes extends java.awt.Panel {
                 .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 676, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
+                .addComponent(btnRecargar)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRecargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarActionPerformed
+        cargarComprobantes();
+    }//GEN-LAST:event_btnRecargarActionPerformed
+
+    private void cargarComprobantes() {
+        comprobantes = comprobanteBL.obtenerTodo();
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        modelo.setColumnIdentifiers(new Object[]{
+            "",
+            "Nro Comprobante",
+            "Tarifa",
+            "Zona",
+            "Precio",
+            "Cantidad",
+            "Total",
+            "Estado",
+            "Metodo Pago",
+            "Fecha Pago",
+            "",
+            ""
+        });
+
+        for (ComprobanteBE comprobante : comprobantes) {
+            
+            MaestroDetalleBE estado = maestroDetalleBL.obtenerPorId(comprobante.getIdEstado());
+            MaestroDetalleBE metodoPago = maestroDetalleBL.obtenerPorId(comprobante.getIdMetodoPago());
+            
+            modelo.addRow(new Object[]{
+                comprobante.getId(),
+                comprobante.getNumeroComprobante(),
+                comprobante.getTipoTarifa(),
+                comprobante.getZonaParking(),
+                comprobante.getPrecioBase(),
+                comprobante.getCantidad(),
+                comprobante.getMontoTotal(),
+                estado.getValor(),
+                metodoPago.getValor(),
+                comprobante.getFechaPago(),
+                new ImageIcon(getClass().getResource("/Recursos/eliminar.png")),
+                new ImageIcon(getClass().getResource("/Recursos/comprobante.png")),
+            });
+        }
+
+        tblComprobantes.setModel(modelo);
+
+        DefaultTableCellRenderer iconRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                JLabel label = new JLabel();
+                label.setHorizontalAlignment(JLabel.CENTER);
+                if (value instanceof Icon) {
+                    label.setIcon((Icon) value);
+                }
+                return label;
+            }
+        };
+
+        tblComprobantes.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblComprobantes.getColumnModel().getColumn(0).setMinWidth(0);
+        tblComprobantes.getColumnModel().getColumn(0).setWidth(0);
+        tblComprobantes.getColumnModel().getColumn(10).setCellRenderer(iconRenderer);
+        tblComprobantes.getColumnModel().getColumn(11).setCellRenderer(iconRenderer);
+        tblComprobantes.setRowHeight(25);
+        tblComprobantes.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tblComprobantes.setPreferredScrollableViewportSize(tblComprobantes.getPreferredSize());
+
+        anchoColumnas();
+    }
+    
+    private void anchoColumnas() {
+        TableColumnModel columnModel = tblComprobantes.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(0); 
+        columnModel.getColumn(1).setPreferredWidth(250); 
+        columnModel.getColumn(2).setPreferredWidth(100); 
+        columnModel.getColumn(3).setPreferredWidth(100); 
+        columnModel.getColumn(4).setPreferredWidth(80);  
+        columnModel.getColumn(5).setPreferredWidth(80); 
+        columnModel.getColumn(6).setPreferredWidth(80); 
+        columnModel.getColumn(7).setPreferredWidth(80);  
+        columnModel.getColumn(8).setPreferredWidth(100); 
+        columnModel.getColumn(9).setPreferredWidth(100); 
+        columnModel.getColumn(10).setPreferredWidth(50);  
+        columnModel.getColumn(11).setPreferredWidth(50); 
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRecargar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblClientes;
+    private javax.swing.JTable tblComprobantes;
     // End of variables declaration//GEN-END:variables
 }

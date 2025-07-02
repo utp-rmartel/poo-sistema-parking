@@ -8,14 +8,13 @@ package Enums;
  *
  * @author Royss
  */
-public enum TipoDocumentoEnum {
-    DNI(1),
-    PASS(3),
-    CEX(2);
+public enum EstadoComprobanteEnum {
+    PENDIENTE(17),
+    PAGADO(18);
     
     private final int valor;
 
-    TipoDocumentoEnum(int valor) {
+    EstadoComprobanteEnum(int valor) {
         this.valor = valor;
     }
 

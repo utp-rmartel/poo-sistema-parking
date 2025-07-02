@@ -14,14 +14,19 @@ import BusinessEntity.ZonaParkingBE;
  *
  * @author Royss
  */
-public class EstacionamientoCrearDTO {
+public class EstacionamientoDTO {
+    private String id;
     private ClienteBE cliente;
     private VehiculoBE vehiculo;
+    private MaestroDetalleBE tipoVehiculo;
     private TarifaBE tarifa;
     private ZonaParkingBE zonaParking;
     private int cantidad;
 
-    public EstacionamientoCrearDTO(ClienteBE cliente, VehiculoBE vehiculo, TarifaBE tarifa, ZonaParkingBE zonaParking, int cantidad) {
+    public EstacionamientoDTO() {}
+        
+    
+    public EstacionamientoDTO(ClienteBE cliente, VehiculoBE vehiculo, TarifaBE tarifa, ZonaParkingBE zonaParking, int cantidad) {
         this.cliente = cliente;
         this.vehiculo = vehiculo;
         this.tarifa = tarifa;
@@ -29,6 +34,22 @@ public class EstacionamientoCrearDTO {
         this.cantidad = cantidad;
     }
 
+    public MaestroDetalleBE getTipoVehiculo() {
+        return tipoVehiculo;
+    }
+
+    public void setTipoVehiculo(MaestroDetalleBE tipoVehiculo) {
+        this.tipoVehiculo = tipoVehiculo;
+    }
+    
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    
     public int getCantidad() {
         return cantidad;
     }

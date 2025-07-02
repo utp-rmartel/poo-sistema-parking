@@ -48,18 +48,19 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
             pst.setInt(6, input.getIdEstado());
             pst.setInt(7, input.getCantidad());
             
-            result = pst.execute();            
+            pst.execute();
+            return true;        
         }catch(Exception e){
             System.out.println(e.getMessage());
+            return false;
         }
-        return result;
     }
 
     @Override
     public EstacionamientoBE Read(String id) {
         EstacionamientoBE item = new EstacionamientoBE();
         try{
-            String SQL ="SELECT * FROM estacionamiento WHERE id=? and activo = 1";
+            String SQL ="SELECT * FROM Estacionamiento WHERE id=? and activo = 1";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             ResultSet res = pst.executeQuery(); 
@@ -109,52 +110,70 @@ public class EstacionamientoDAO extends ConexionMySQL implements IBaseDAO<Estaci
 
     @Override
     public boolean Update(EstacionamientoBE input) {
-        boolean result = false;
         try{
-            String SQL="UPDATE estacionamiento "
+            String SQL="UPDATE Estacionamiento "
                     + "SET "
-                        + "idVehiculo=?,"
-                        + "idZonaParking=?,"
-                        + "idTarifa=?,"
-                        + "fechaHoraEntrada=?,"
-                        + "idEstado=?,"
-                        + "cantidad=?"
+                        + "idZonaParking=?, "
+                        + "idTarifa=?, "
+                        + "cantidad=? "
                     + "WHERE "
-                        + "id=?";
+                        + "id = ? ";
             
             PreparedStatement pst = getConexion().prepareStatement(SQL);
                        
-            pst.setString(1, input.getIdVehiculo().toString());
-            pst.setInt(2, input.getIdZonaParking());
-            pst.setString(3, input.getIdTarifa().toString());
-            pst.setTimestamp(4, Timestamp.valueOf(input.getFechaHoraEntrada()));
-            pst.setInt(5, input.getIdEstado());
-            pst.setInt(6, input.getCantidad());
-            pst.setString(7, input.getId().toString());
+            pst.setInt(1, input.getIdZonaParking());
+            pst.setString(2, input.getIdTarifa().toString());
+            pst.setInt(3, input.getCantidad());
+            pst.setString(4, input.getId().toString());
    
-            result = pst.execute();
+            pst.execute();
+            return true;
         }catch(Exception e){
             System.out.println(e.getMessage());
+            return false;
         }
-        return result;
+        
+    }
+    
+    public boolean ActualizarEstado(String id, int idEstado) {
+        try{
+            String SQL="UPDATE Estacionamiento "
+                    + "SET "
+                        + "idEstado = ? "
+                    + "WHERE "
+                        + "id = ? ";
+            
+            PreparedStatement pst = getConexion().prepareStatement(SQL);
+                       
+            pst.setInt(1, idEstado);
+            pst.setString(2, id);
+   
+            pst.execute();
+            return true;
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+        
     }
 
     @Override
     public boolean Delete(String id) {
         boolean result = false;
         try {
-            String SQL="UPDATE estacionamiento "
+            String SQL="UPDATE Estacionamiento "
                     + "SET "
-                        + "activo=0"
+                        + "activo=0 "
                     + "WHERE "
-                        + "id=?";
+                        + "id = ? ";
             PreparedStatement pst = getConexion().prepareStatement(SQL);
             pst.setString(1, id);
             result = pst.execute(); 
+            return true;
         }catch(Exception e){
             System.out.println(e.getMessage()); 
+            return false;
         }        
-        return result;
     }
 
     

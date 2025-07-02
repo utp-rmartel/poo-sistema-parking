@@ -30,11 +30,6 @@ public class ConexionMySQL {
                     .getConnection(StrConxMySQL,StrUserMySQL,StrPassMySQL);
             if(Conexion != null){
                 DatabaseMetaData dm = Conexion.getMetaData();
-                System.out.println("Product Name:" + dm.getDatabaseProductName());
-                System.out.println("Product Version:" 
-                        + dm.getDatabaseProductVersion());
-                System.out.println("Driver Name:" + dm.getDriverName());
-                System.out.println("Driver Version:" + dm.getDriverVersion());
                 
             }
         }catch(ClassNotFoundException | SQLException e){

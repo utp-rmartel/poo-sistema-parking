@@ -19,7 +19,7 @@ public class ComprobanteBE extends AuditoriaAbs{
     private String tipoTarifa;
     private String zonaParking;
     private Double precioBase;
-    private Double precioAdicional;
+    private Integer cantidad;
     private Double montoTotal;
     private int idMetodoPago;
     private int idEstado;
@@ -84,12 +84,12 @@ public class ComprobanteBE extends AuditoriaAbs{
         this.precioBase = precioBase;
     }
 
-    public Double getPrecioAdicional() {
-        return precioAdicional;
+    public Integer getCantidad() {
+        return cantidad;
     }
 
-    public void setPrecioAdicional(Double precioAdicional) {
-        this.precioAdicional = precioAdicional;
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 
     public Double getMontoTotal() {

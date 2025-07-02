@@ -20,7 +20,7 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
 
     @Override
     public boolean Create(ComprobanteBE input) {
-        boolean result=false;
+        
         
         try{
               String SQL = "INSERT Comprobante"
@@ -31,9 +31,9 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
                         + "tipoTarifa,"
                         + "zonaParking,"
                         + "precioBase,"
-                        + "precioAdicional,"
+                        + "cantidad,"
                         + "montoTotal,"
-                        + "idMetodoPago,"
+                        + "idEstado,"
                         + "fechaPago"
                     + ")"
                     + "VALUES"
@@ -45,16 +45,19 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
             pst.setString(4, input.getTipoTarifa());
             pst.setString(5, input.getZonaParking());
             pst.setDouble(6, input.getPrecioBase());
-            pst.setDouble(7, input.getPrecioAdicional());
+            pst.setInt(7, input.getCantidad());
             pst.setDouble(8, input.getMontoTotal());
-            pst.setInt(9, input.getIdMetodoPago());
+            pst.setInt(9, input.getIdEstado());
             pst.setDate(10, (Date) input.getFechaPago());
             
-            result = pst.execute();            
+            pst.execute();  
+            
+            return true;
         }catch(Exception e){
             System.out.println(e.getMessage());
+            return false;
         }
-        return result;
+        
     }
 
     @Override
@@ -68,15 +71,17 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
             
             while(res.next()){
                 item.setId(UUID.fromString(id));          
-                item.setIdEstacionamiento(UUID.fromString("idEstacionamiento"));
+                item.setId(UUID.fromString(res.getString("id")));
+                item.setIdEstacionamiento(UUID.fromString(res.getString("idEstacionamiento")));
                 item.setNumeroComprobante(res.getString("numeroComprobante"));
                 item.setTipoTarifa(res.getString("tipoTarifa"));
                 item.setZonaParking(res.getString("zonaParking"));
                 item.setPrecioBase(res.getDouble("precioBase"));
-                item.setPrecioAdicional(res.getDouble("precioAdicional"));
+                item.setCantidad(res.getInt("cantidad"));
                 item.setMontoTotal(res.getDouble("montoTotal"));
                 item.setIdMetodoPago(res.getInt("idMetodoPago"));
-                item.setFechaPago(res.getDate("fechaPago"));           
+                item.setIdEstado(res.getInt("idEstado"));
+                item.setFechaPago(res.getDate("fechaPago"));       
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -88,21 +93,22 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
     public List<ComprobanteBE> ReadAll() {
         List<ComprobanteBE> lst = null; 
         try{
-            String SQL = "SELECT * FROM comprobante WHERE activo = 1";
+            String SQL = "SELECT * FROM Comprobante WHERE activo = 1";
             Statement stm = getConexion().createStatement();
             ResultSet res = stm.executeQuery(SQL);
             lst = new ArrayList<>(); 
             while(res.next()){
                 ComprobanteBE item = new ComprobanteBE();
                 item.setId(UUID.fromString(res.getString("id")));
-                item.setIdEstacionamiento(UUID.fromString("idEstacionamiento"));
+                item.setIdEstacionamiento(UUID.fromString(res.getString("idEstacionamiento")));
                 item.setNumeroComprobante(res.getString("numeroComprobante"));
                 item.setTipoTarifa(res.getString("tipoTarifa"));
                 item.setZonaParking(res.getString("zonaParking"));
                 item.setPrecioBase(res.getDouble("precioBase"));
-                item.setPrecioAdicional(res.getDouble("precioAdicional"));
+                item.setCantidad(res.getInt("cantidad"));
                 item.setMontoTotal(res.getDouble("montoTotal"));
                 item.setIdMetodoPago(res.getInt("idMetodoPago"));
+                item.setIdEstado(res.getInt("idEstado"));
                 item.setFechaPago(res.getDate("fechaPago"));  
                 
                 lst.add(item);
@@ -118,14 +124,14 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
     public boolean Update(ComprobanteBE input) {
          boolean result = false;
         try{
-            String SQL="UPDATE comprobante "
+            String SQL="UPDATE Comprobante "
                     + "SET "
                         + "idEstacionamiento=?,"
                         + "numeroComprobante=?,"
                         + "tipoTarifa=?,"
                         + "zonaParking=?,"
                         + "precioBase=?,"
-                        + "precioAdicional=?,"
+                        + "cantidad=?,"
                         + "montoTotal=?,"
                         + "idMetodoPago=?,"
                         + "fechaPago=?"
@@ -139,7 +145,7 @@ public class ComprobanteDAO extends ConexionMySQL implements IBaseDAO<Comprobant
             pst.setString(3, input.getTipoTarifa());
             pst.setString(4, input.getZonaParking());
             pst.setDouble(5, input.getPrecioBase());
-            pst.setDouble(6, input.getPrecioAdicional());
+            pst.setInt(6, input.getCantidad());
             pst.setDouble(7, input.getMontoTotal());
             pst.setInt(8,input.getIdMetodoPago());
             pst.setDate(9, (Date) input.getFechaPago());

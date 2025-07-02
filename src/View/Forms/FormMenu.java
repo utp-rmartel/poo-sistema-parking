@@ -92,7 +92,7 @@ public class FormMenu extends javax.swing.JFrame {
         pContent.setLayout(pContentLayout);
         pContentLayout.setHorizontalGroup(
             pContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 467, Short.MAX_VALUE)
+            .addGap(0, 677, Short.MAX_VALUE)
         );
         pContentLayout.setVerticalGroup(
             pContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
